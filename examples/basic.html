@@ -1,0 +1,54 @@
+<!DOCTYPE>
+<html>
+  <head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <script src="../src/CibulCalendar.min.js" type="text/javascript"></script>
+    <style type="text/css">
+
+      body { text-align: center; font-family: 'Arial',Tahoma,Helvetica,Sans-Serif; }
+      .content { padding: 20px; display: inline-block; font-size: 1em; }
+
+      .ccal { width: 18em; font-size: 0.8em; margin-bottom: 5px;}
+      .ccal ul { margin: 0; padding: 0!important; text-align: center; }
+      .ccal li { list-style-type: none; display: inline-block; width: 13.2%; cursor: pointer; text-align: center; margin:0; }
+      .ccal li span { display: inline-block; line-height: 1.8em; }
+      .ccal li.calmonth { width: 66%; }
+      .ccal li span { padding: 0.1em 0.05em; display: block; }
+      .ccal li.calprev span, .ccal li.calnext span { color: #aaa; }
+      .ccal .calbody li.selected span { background: #666; color: white; }
+      .ccal .calbody li.preselected span { background: #f0f0f0; }
+      .ccal * { -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none; }
+      .today { font-weight: bold; }
+      .calendar-canvas { 
+        text-align: center;
+        background: white;
+        v-moz-box-shadow: 0 3px 4px #999999; 
+        -moz-box-shadow: 0 3px 4px #999999; 
+        -webkit-box-shadow: 0 3px 4px #999999; 
+        box-shadow: 0 1px 2px #999999;
+      }
+
+    </style>
+    <script type="text/javascript">
+
+      function onload() {
+
+        setCibulCalendar('datespan');
+
+        /*var simplestCal = new CibulCalendar(document.getElementById('cal'), {
+          onSelect: function(selected) {
+            console.log(selected);
+          },
+          lang: 'fr'
+        });*/
+
+      }
+
+    </script>
+  </head>
+  <body onload="onload()">
+    <div class="content">
+      <input type="text" id="datespan"/> 
+    </div>
+  </body>
+</html>

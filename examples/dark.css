@@ -1,0 +1,10 @@
+.ccal { width: 20em; }
+.ccal ul { margin: 0; padding: 0; text-align: left; }
+.ccal li { list-style-type: none; display: inline-block; width: 13.2%; cursor: pointer; text-align: center; }
+.ccal li span { display: inline-block; line-height: 1.8em; letter-spacing: 0.15em; margin: 0.08em; }
+.ccal li.calmonth { width: 66%; }
+.ccal li span { padding: 0.4em 0.1em; display: block; }
+.ccal li.calprev span, .ccal li.calnext span { background: #161616; color: #1a1a1a; }
+.ccal .calbody li.selected span { background: #00CCFF; }
+.ccal .calbody li.preselected span { background: #B11A40; }
+.ccal * { -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none; }
