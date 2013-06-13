@@ -1,4 +1,6 @@
 /*!
+ * modified by Jeedy
+ * 
  * CibulCalendar v0.2.3 ~ Copyright (c) 2013 Kari Olafsson, http://tech.cibul.net
  * Released under MIT license, http://opensource.org/licenses/mit-license.php
  */
@@ -41,13 +43,15 @@
             en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
             fr: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
             it: ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'],
-            es: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Augosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
+            es: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Augosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+            kr: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월']
           }, options.monthNames?options.monthNames:{}),
           weekDays: extend({
             en: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
             fr: ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'],
             it: ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'],
-            es: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab']
+            es: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+            kr: ['일', '월', '화', '수', '목', '금', '토']
           }, options.weekDays),
           switchMonthOnHoverDelay: 800,
         }, options),
@@ -146,13 +150,14 @@
 
       // selection behavior on month click
       addEvent(getElementsByClassName(this.displayedCalendarElement, this.options.classes.month)[0], 'click', function(){
-        self._selectMonth();
+      self._selectMonth();
       });
       
     },
     _selectMonth: function(){
 
       if (!this.enabled) return;
+      if (!this.options.range) return;
 
       var dMonth = this._getDisplayedMonth();
 
@@ -593,7 +598,7 @@
     _init = function() {
       options = extend({
         onSelect: _onSelect,
-        separator: ' - ',
+        separator: ' ~ ',
         canvasClass: 'calendar-canvas',
         offset: {top: 5, left: 0 }
       }, options?options:{});
@@ -638,11 +643,15 @@
 
     },
     _onSelect = function(newSelection) {
-      element.value = _dateToString(newSelection.begin) + (newSelection.begin!=newSelection.end?options.separator+_dateToString(newSelection.end):'');
-      setTimeout(_blur,200);
+    	if(newSelection instanceof Date){
+    		element.value = _dateToString(newSelection);
+    	}else{
+    		element.value = _dateToString(newSelection.begin) + (newSelection.begin!=newSelection.end?options.separator+_dateToString(newSelection.end):'');
+    	}
+        setTimeout(_blur,200);
     },
     _dateToString = function(date) {
-      return _fZ(date.getDate()) + '/' + _fZ(date.getMonth()+1) + '/' + date.getFullYear();
+      return date.getFullYear() + '-' + _fZ(date.getMonth()+1) + '-' + _fZ(date.getDate());
     },
     _fZ = function(n) {
       return (n>9?'':'0') + n;
