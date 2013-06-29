@@ -7,6 +7,9 @@ Go here for documentation: http://tech.cibul.net/cibulcalendar-a-date-range-pick
 
 changelog:
 
+2013-06-29 - v0.2.4 - bugfix
+  bug fixed: range selection over several months starting on a date that is not of the displayed month
+
 2013-03-10 - v0.2.3 - added features:
   Single select
   Popup helper

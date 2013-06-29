@@ -1,5 +1,5 @@
 /*!
- * CibulCalendar v0.2.3 ~ Copyright (c) 2013 Kari Olafsson, http://tech.cibul.net
+ * CibulCalendar v0.2.4 ~ Copyright (c) 2013 Kari Olafsson, http://tech.cibul.net
  * Released under MIT license, http://opensource.org/licenses/mit-license.php
  */
 
@@ -473,7 +473,9 @@
         
         // ensure selection origin calendar is maintained and hidden if it isn't calendar to be shown. Show it if it is.
 
-        if ((displayedMonth.getMonth() == this.anchorDate.getMonth()) && (displayedMonth.getFullYear() == this.anchorDate.getFullYear())) {
+        if ((displayedMonth.getMonth() == this.anchorDate.getMonth()) 
+          && (displayedMonth.getFullYear() == this.anchorDate.getFullYear())
+          && (getElementsByClassName(this.element, this.options.classes.originCalendar).length)) {
 
           this.element.removeChild(getElementsByClassName(this.element, this.options.classes.calendar)[0]);
 
