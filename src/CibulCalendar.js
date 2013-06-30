@@ -519,7 +519,7 @@
     _getMonthStack: function(month, year) {
 
       var calStack = [], 
-          day = new Date(year, month + 1, 0),
+          day = new Date(year, month + 1, 0), //start with the last day of the month
           i;
 
       // shove in month days
@@ -528,10 +528,15 @@
       while(i--)
         calStack.unshift((i+1) + '');
 
+      // every day of the month is now in the stack,
       // shove in days of previous month
+
       day = new Date(year, month, 1);
 
-      while(day.getDay() > this.options.firstDayOfWeek) {
+      offsetDays = (day.getDay()-this.options.firstDayOfWeek)%7;
+      offsetDays = offsetDays<0?offsetDays+7:offsetDays;
+
+      while(offsetDays--) {
 
         day.setDate(day.getDate()-1);
 
