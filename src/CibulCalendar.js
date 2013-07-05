@@ -1,5 +1,5 @@
 /*!
- * CibulCalendar v0.2.4 ~ Copyright (c) 2013 Kari Olafsson, http://tech.cibul.net
+ * CibulCalendar v0.2.5 ~ Copyright (c) 2013 Kari Olafsson, http://tech.cibul.net
  * Released under MIT license, http://opensource.org/licenses/mit-license.php
  */
 
@@ -422,7 +422,8 @@
 
         } else {
 
-          if ((i>27) && (mSi<12)) {
+          // 
+          if ((i>27) && (mSi<13)) {
 
             classes.push(this.options.classes.nextMonthDate);
             varMonth = 1;
@@ -645,7 +646,9 @@
 
     },
     _onSelect = function(newSelection) {
-      element.value = _dateToString(newSelection.begin) + (newSelection.begin!=newSelection.end?options.separator+_dateToString(newSelection.end):'');
+
+      element.value = newSelection.begin?_dateToString(newSelection.begin) + (newSelection.begin!=newSelection.end?options.separator+_dateToString(newSelection.end):''):_dateToString(newSelection);
+
       setTimeout(_blur,200);
     },
     _dateToString = function(date) {
