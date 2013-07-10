@@ -648,6 +648,7 @@
     _onSelect = function(newSelection) {
 
       element.value = newSelection.begin?_dateToString(newSelection.begin) + (newSelection.begin!=newSelection.end?options.separator+_dateToString(newSelection.end):''):_dateToString(newSelection);
+      fireEvent(element, 'change');
 
       setTimeout(_blur,200);
     },
@@ -697,6 +698,19 @@
       } else {
           elem["on"+type]=eventHandle;
       }  
+    });
+  },
+  fireEvent = function(elem, types) {
+    if (elem == null || elem == undefined) return;
+    if (typeof types == 'string') types = [types];
+    forEach(types, function(type){
+      if ("fireEvent" in elem) {
+        elem.fireEvent(type);
+      } else {
+        var evt = document.createEvent("HTMLEvents");
+        evt.initEvent(type, false, true);
+        elem.dispatchEvent(evt);
+      }
     });
   },
   makeUnselectable = function(node) {
