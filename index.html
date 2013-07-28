@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Cibulcalendar by kaore</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Cibulcalendar</h1>
+        <p>A javascript date range picker</p>
+
+        <p class="view"><a href="https://github.com/kaore/CibulCalendar">View the Project on GitHub <small>kaore/CibulCalendar</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/kaore/CibulCalendar/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/kaore/CibulCalendar/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/kaore/CibulCalendar">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a name="overview" class="anchor" href="#overview"><span class="octicon octicon-link"></span></a>Overview</h1>
+
+<p>CibulCalendar is a date picker that enables users to easily pick dates or date ranges.</p>
+
+<p>Here is the simplest way to get it running:</p>
+
+<p><code>function onload() {
+  setCibulCalendar('basic'); // will stick to element &lt;input type="text" id="basic"/&gt;
+}</code></p>
+
+<p>You can see a live demo by clicking on the "where" field in the header in <a href="http://cibul.net">this website</a></p>
+
+<p>Features include:</p>
+
+<ul>
+<li>Drag and drop range selection</li>
+<li>Single date selection</li>
+<li>Multilingual</li>
+<li>Helper function for single line setup</li>
+<li>Fully Customizable (see details below)</li>
+</ul><p>How to use</p>
+
+<p>There are two ways to use the calendar:</p>
+
+<p>The easiest way is to use the helper function to bind the calendar to an input field:</p>
+
+<p><code>setCibulCalendar(id, options)</code></p>
+
+<p>But you might want to handle the Calendar in a script rather than applying it directly on an input field, in which case you should use:</p>
+
+<p><code>var cCal = new CibulCalendar(canvasElem, options)</code> </p>
+
+<h1>
+<a name="options" class="anchor" href="#options"><span class="octicon octicon-link"></span></a>Options</h1>
+
+<ul>
+<li>
+<strong>range</strong> (default: true): if false, range date picking is disabled. Here is an example.</li>
+<li>
+<strong>enabled</strong> (default: true): state of the calendar at init</li>
+<li>
+<strong>lang</strong> (default: ‘en’): Language of the calendar. can be english (en), french (fr), italian (it) or spanish (es). You can extend this with any other language (see below).</li>
+<li>
+<strong>firstDayOfWeek</strong> (default: 1): first day of the week on the calendar. 0 for sunday and onwards.</li>
+<li>
+<strong>selected</strong> (default: false): default selection at initialization. Should be a object: {begin: Date, end: Date}</li>
+<li>
+<strong>filter</strong>: (default: false): callback called on each calendar render to handle date classes. If set, function is given a date and an array of classes and should return the array of classes that will be set on the rendered calendar. Click here for an example highlighting weekends.
+navDomContent (default: {prev: ‘&lt;', next: '&gt;‘}): html content for the month navigation links. In case you want to set something more fancy like icons or images.</li>
+<li>
+<strong>classes</strong>: in case you want to change the name of the classes used in the calendar.</li>
+<li>
+<strong>monthNames</strong>: add a new month set in the language of your choice. See here for an example of a calendar in icelandic</li>
+<li>
+<strong>weekDays</strong>: add a new week set in the language of your choice</li>
+<li>
+<strong>switchMonthOnHoverDelay</strong>: on a range selection spanning over multiple months, the delay during which next month days should be hovered over before the calendar goes to the neighboring month</li>
+</ul><h1>
+<a name="methods" class="anchor" href="#methods"><span class="octicon octicon-link"></span></a>Methods</h1>
+
+<ul>
+<li>
+<strong>disable</strong>: disable the calendar</li>
+<li>
+<strong>enable</strong>: enable the calendar</li>
+<li>
+<strong>showNext</strong>: render following month</li>
+<li>
+<strong>showPrevious</strong>: render previous month</li>
+<li>
+<strong>setSelected(newSelection, updateMonth)</strong>: set new selection. newSelection is an object containing two indexes: begin and end, each referring to a date.</li>
+<li>
+<strong>updateMonth</strong> is a boolean indicating if the month of the start of the selection should be displayed.</li>
+</ul>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/kaore">kaore</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
