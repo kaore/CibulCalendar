@@ -533,7 +533,7 @@
       i = day.getDate();
 
       while(i--)
-        calStack.unshift((i+1) + '');
+        calStack.unshift((i+1).toString());
 
       // every day of the month is now in the stack,
       // shove in days of previous month
@@ -547,7 +547,7 @@
 
         day.setDate(day.getDate()-1);
 
-        calStack.unshift(day.getDate() + '');
+        calStack.unshift(day.getDate().toString());
 
       };
 
@@ -558,7 +558,7 @@
 
         day.setDate(day.getDate()+1);
 
-        calStack.push(day.getDate() + '');
+        calStack.push(day.getDate().toString());
 
       }
 
