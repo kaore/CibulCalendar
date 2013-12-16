@@ -5,6 +5,8 @@
 
 (function(){
 
+  'use strict';
+
   var hasTouch = 'ontouchstart' in window && !(/hp-tablet/gi).test(navigator.appVersion),
 
     CibulCalendar = function(element, options) {
@@ -99,15 +101,15 @@
       if (selected) {
 
         if (typeof selected.begin == 'undefined') selected = { begin: selected, end: selected };
-        
+
         if (typeof updateMonth == 'undefined') updateMonth = true;
 
         this.selection = (selected.begin > selected.end)?{ begin: selected.end, end: selected.begin }:selected;
 
-        if (this.selection && updateMonth) { 
+        if (this.selection && updateMonth) {
           this._setDisplayedMonth(new Date(this.selection.begin.getTime()));
         } else {
-          this._renderSelection(this.selection);  
+          this._renderSelection(this.selection);
         }
 
       } else {
@@ -154,7 +156,7 @@
       addEvent(getElementsByClassName(this.displayedCalendarElement, this.options.classes.month)[0], 'click', function(){
         self._selectMonth();
       });
-      
+
     },
     _selectMonth: function(){
 
@@ -185,8 +187,8 @@
 
       addEvent(listItem, ['mouseover', 'touchmove'], function(event) {
 
-        if (!self.selecting || !self.enabled) return; 
-          
+        if (!self.selecting || !self.enabled) return;
+
         self._updatePreselection(self._getActualListItem(listItem, event));
 
       });
@@ -367,15 +369,15 @@
 
       if (!this.displayedCalendarElement) return;
 
-      var iDate = false, 
-        i=0, 
+      var iDate = false,
+        i=0,
         classes,
         self = this,
         currentMonth = self._getDisplayedMonth().getMonth(),
         preSelection = (typeof preSelection == 'undefined')?false:preSelection;
 
       forEach(getElementsByClassName(this.displayedCalendarElement, this.options.classes.calendarBody)[0].getElementsByTagName('li'), function(listItem) {
-      
+
         classes = [];
 
         if (!iDate) iDate = self._getDateFromElement(listItem);
@@ -428,7 +430,7 @@
 
         } else {
 
-          // 
+          //
           if ((i>27) && (mSi<13)) {
 
             classes.push(this.options.classes.nextMonthDate);
@@ -461,7 +463,7 @@
         render = render.replace(regexp, this.options.weekDays[this.options.lang][(i + this.options.firstDayOfWeek)%7]);
 
       };
-      
+
       // render title
       render = render.replace('#title', this.options.monthNames[this.options.lang][displayedMonth.getMonth()] + ' ' + displayedMonth.getFullYear());
 
@@ -477,10 +479,10 @@
       var displayedMonth = this._getDisplayedMonth();
 
       if (this.selecting) {
-        
+
         // ensure selection origin calendar is maintained and hidden if it isn't calendar to be shown. Show it if it is.
 
-        if ((displayedMonth.getMonth() == this.anchorDate.getMonth()) 
+        if ((displayedMonth.getMonth() == this.anchorDate.getMonth())
           && (displayedMonth.getFullYear() == this.anchorDate.getFullYear())
           && (getElementsByClassName(this.element, this.options.classes.originCalendar).length)) {
 
@@ -496,7 +498,7 @@
           // set origin calendar if does not exist and render current month calendar
           if (!getElementsByClassName(this.element, this.options.classes.originCalendar).length) {
             getElementsByClassName(this.element, this.options.classes.calendar)[0].setAttribute('style', 'display:none;');
-            getElementsByClassName(this.element, this.options.classes.calendar)[0].className = this.options.classes.originCalendar;  
+            getElementsByClassName(this.element, this.options.classes.calendar)[0].className = this.options.classes.originCalendar;
           } else {
             this.element.removeChild(getElementsByClassName(this.element, this.options.classes.calendar)[0]);
           }
@@ -525,15 +527,16 @@
     },
     _getMonthStack: function(month, year) {
 
-      var calStack = [], 
+      var calStack = [],
           day = new Date(year, month + 1, 0), //start with the last day of the month
+          offsetDays,
           i;
 
       // shove in month days
       i = day.getDate();
 
       while(i--)
-        calStack.unshift((i+1) + '');
+        calStack.unshift((i+1).toString());
 
       // every day of the month is now in the stack,
       // shove in days of previous month
@@ -547,7 +550,7 @@
 
         day.setDate(day.getDate()-1);
 
-        calStack.unshift(day.getDate() + '');
+        calStack.unshift(day.getDate().toString());
 
       };
 
@@ -558,7 +561,7 @@
 
         day.setDate(day.getDate()+1);
 
-        calStack.push(day.getDate() + '');
+        calStack.push(day.getDate().toString());
 
       }
 
@@ -703,7 +706,7 @@
           elem.attachEvent( "on" + type, eventHandle );
       } else {
           elem["on"+type]=eventHandle;
-      }  
+      }
     });
   },
   fireEvent = function(elem, types) {
@@ -721,7 +724,7 @@
   },
   makeUnselectable = function(node) {
     if (node.nodeType == 1) node.setAttribute("unselectable", "on");
-    
+
     var child = node.firstChild;
     while (child) {
         makeUnselectable(child);
@@ -729,7 +732,7 @@
     }
   },
   previousObject = function(elem) {
-    
+
     elem = elem.previousSibling;
 
     while (elem && elem.nodeType != 1)
