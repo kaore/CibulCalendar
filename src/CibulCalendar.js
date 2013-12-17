@@ -3,9 +3,8 @@
  * Released under MIT license, http://opensource.org/licenses/mit-license.php
  */
 
-(function(){
+(function () {
 
-  'use strict';
 
   var hasTouch = 'ontouchstart' in window && !(/hp-tablet/gi).test(navigator.appVersion),
 
@@ -44,18 +43,18 @@
             fr: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
             it: ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'],
             es: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Augosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-	    sv: ['Januari', 'Februari', 'Mars', 'April', 'Maj', 'Juni', 'Juli', 'Augusti', 'September', 'Oktober', 'November', 'December'],
-	    no: ['Januar', 'Februar', 'Mars', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Desember'],
-	    da: ['Januar', 'Februar', 'Marts', 'April', 'Maj', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'December']
+            sv: ['Januari', 'Februari', 'Mars', 'April', 'Maj', 'Juni', 'Juli', 'Augusti', 'September', 'Oktober', 'November', 'December'],
+            no: ['Januar', 'Februar', 'Mars', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Desember'],
+            da: ['Januar', 'Februar', 'Marts', 'April', 'Maj', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'December']
           }, options.monthNames?options.monthNames:{}),
           weekDays: extend({
             en: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
             fr: ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'],
             it: ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'],
             es: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
-	    sv: ['Sön', 'Mån', 'Tid', 'Ons', 'Tor', 'Fre', 'Lör'],
-	    no: ['Søn', 'Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør'],
-	    da: ['Søn', 'Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør']
+            sv: ['Sön', 'Mån', 'Tid', 'Ons', 'Tor', 'Fre', 'Lör'],
+            no: ['Søn', 'Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør'],
+            da: ['Søn', 'Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør']
           }, options.weekDays),
           switchMonthOnHoverDelay: 800,
         }, options),
@@ -82,21 +81,21 @@
       this.enabled = true;
       removeClass(getElementsByClassName(this.element, this.options.classes.calendar)[0], this.options.classes.disabled);
     },
-    showNext: function() {
+    showNext: function () {
 
       if (!this.enabled) return;
 
       this._incDisplayedMonth();
 
     },
-    showPrevious: function() {
+    showPrevious: function () {
 
       if (!this.enabled) return;
 
       this._decDisplayedMonth();
 
     },
-    setSelected: function(selected, updateMonth) {
+    setSelected: function (selected, updateMonth) {
 
       if (selected) {
 
@@ -104,15 +103,42 @@
 
         if (typeof updateMonth == 'undefined') updateMonth = true;
 
-        this.selection = (selected.begin > selected.end)?{ begin: selected.end, end: selected.begin }:selected;
+
+        if (this.options.range) {
+          if (selected.begin > selected.end) {
+            this.selection = { begin: selected.end, end: selected.begin };
+          }
+          else if (selected.end > selected.begin) {
+            this.selection = selected;
+          }
+          //
+          else if (this.selection.begin && this.selection.end) {
+            this.selection = selected;
+          }
+          else {
+            selected = selected.begin || selected.end;
+            if (!this.selection.begin || this.selection.begin > selected) {
+              this.selection = { begin: selected, end: this.selection.begin };
+            }
+            else {
+              this.selection = { begin: this.selection.begin, end: selected };
+            }
+          }
+        }
+
+        else {
+          this.selection = selected;
+        }
 
         if (this.selection && updateMonth) {
           this._setDisplayedMonth(new Date(this.selection.begin.getTime()));
-        } else {
+        }
+        else {
           this._renderSelection(this.selection);
         }
 
-      } else {
+      }
+      else {
 
         this.selection = false;
 
@@ -158,26 +184,41 @@
       });
 
     },
-    _selectMonth: function(){
+    _selectMonth: function() {
 
       if (!this.enabled) return;
 
       var dMonth = this._getDisplayedMonth();
 
-      this.setSelected({begin: new Date(dMonth.getFullYear(), dMonth.getMonth(), 1), end: new Date(dMonth.getFullYear(), dMonth.getMonth()+1, 0)});
+      this.setSelected({
+        begin: new Date(dMonth.getFullYear(), dMonth.getMonth(), 1),
+        end: new Date(dMonth.getFullYear(), dMonth.getMonth()+1, 0)
+      });
 
       this._renderCalendar();
 
-      if (typeof this.options.onSelect != 'undefined') this.options.onSelect(this.selection);
+      if (typeof this.options.onSelect != 'undefined') this.options.onSelect(this._getSelected());
 
     },
     _applySelectionBehavior: function(listItem) {
 
       var self = this;
 
-      addEvent(listItem, ['touchstart', 'mousedown'], function(event){
+      addEvent(listItem, ['click', 'touchend'], function (event) {
+
+        if (!self.enabled) return;
+
+        console.log('loge');
+
+        self._handleClick(listItem, event);
+
+      });
+
+      addEvent(listItem, ['touchstart', 'mousedown'], function(event) {
 
         if (self.selecting || !self.enabled) return;
+
+        console.log('mousedown');
 
         self.selecting = true;
 
@@ -189,41 +230,70 @@
 
         if (!self.selecting || !self.enabled) return;
 
+        console.log('mouseover');
+
         self._updatePreselection(self._getActualListItem(listItem, event));
 
       });
 
-      addEvent(listItem, ['mouseup', 'touchend'], function(event){
+      addEvent(listItem, ['mouseup', 'touchend'], function(event) {
 
         if (!self.selecting || !self.enabled) return;
+
+        console.log('mouseup');
 
         self.selecting = false;
 
         self._completePreselection(listItem);
 
-        if (getElementsByClassName(self.element, self.options.classes.originCalendar).length) self.element.removeChild(getElementsByClassName(self.element, self.options.classes.originCalendar)[0]);
+        if (getElementsByClassName(self.element, self.options.classes.originCalendar).length) {
+          self.element.removeChild(getElementsByClassName(self.element, self.options.classes.originCalendar)[0]);
+        }
 
       });
     },
-    _preventDefaultBodyMove: function(event) {
+    _handleClick: function (listItem, event) {
+
+      // console.log('listItem', listItem);
+      // console.log('this.anchorDate ', this.anchorDate);
+      // console.log('this.preSelection', this.preSelection);
+      // console.log('this.selection', this.selection);
+
+      if (!this.selection.begin) {
+
+      }
+
+    },
+    _preventDefaultBodyMove: function (event) {
       if (event.preventDefault) event.preventDefault();
     },
-    _beginPreselection: function(listItem) {
+    _beginPreselection: function (listItem) {
 
       if (hasTouch) addEvent(document.getElementsByTagName('body')[0],'touchmove', this._preventDefaultBodyMove);
 
-      this.selection = false;
+      // this.selection = false;
 
       this.currentListItem = listItem;
 
       this.anchorDate = this._getDateFromElement(listItem);
 
-      this.preSelection = { begin: this.anchorDate, end: this.anchorDate };
+      if (this.options.range) {
+        if (!this.preSelection) {
+          this.preSelection = { begin: this.anchorDate };
+        }
+        else {
+          // !!!!!!!!!!!!!!!!!!!!
+          this.preSelection = { begin: this.anchorDate, end: this.anchorDate };
+        }
+      }
+      else {
+        this.preSelection = this.anchorDate;
+      }
 
-      this._renderSelection(this.preSelection, true);
+      this._renderSelection(this.anchorDate, true);
 
     },
-    _updatePreselection: function(listItem) {
+    _updatePreselection: function (listItem) {
 
       if (this.currentListItem == listItem) return;
 
@@ -232,8 +302,15 @@
       var date = this._getDateFromElement(listItem);
 
       if (this.options.range) {
-        this.preSelection = (date < this.anchorDate)?{ begin: date, end: this.anchorDate }:{ begin: this.anchorDate, end: date };
-      } else {
+        if (date < this.anchorDate) {
+          this.preSelection = { begin: date, end: this.anchorDate };
+        }
+        else if (date > this.anchorDate) {
+          this.preSelection = { begin: this.anchorDate, end: date }
+        }
+        // this.preSelection = (date < this.anchorDate) ? { begin: date, end: this.anchorDate } : { begin: this.anchorDate, end: date };
+      }
+      else {
         this.preSelection = { begin: date, end: date };
       }
 
@@ -242,7 +319,7 @@
       this._renderSelection(this.preSelection, true);
 
     },
-    _completePreselection: function(listItem) {
+    _completePreselection: function (listItem) {
 
       if (hasTouch) document.getElementsByTagName('body')[0].removeEventListener('touchmove', this._preventDefaultBodyMove, false);
 
@@ -254,7 +331,7 @@
 
       this.preSelection = false;
 
-      if (typeof this.options.onSelect != 'undefined') this.options.onSelect(this.options.range?this.selection:this.selection.begin);
+      if (typeof this.options.onSelect != 'undefined') this.options.onSelect(this.options.range ? this.selection : this.selection.begin);
 
       this._clearHoverTimer();
 
@@ -577,8 +654,11 @@
     },
     _isWithinRange: function(date, range) {
 
-      var dateString = date.toDateString();
-      var rangeStrings = {begin: range.begin.toDateString(), end: range.end.toDateString() };
+      var dateString = date.toDateString(),
+          rangeStrings = {
+            begin: (range.begin||range.end||range).toDateString(),
+            end: (range.end||range.begin||range).toDateString()
+          };
 
       if ((dateString == rangeStrings.begin) || (dateString == rangeStrings.end)) return true;
 
@@ -656,7 +736,9 @@
     },
     _onSelect = function(newSelection) {
 
-      element.value = newSelection.begin?_dateToString(newSelection.begin) + (newSelection.begin!=newSelection.end?options.separator+_dateToString(newSelection.end):''):_dateToString(newSelection);
+      element.value = newSelection.begin && newSelection.end ?
+                        _dateToString(newSelection.begin) + (newSelection.begin != newSelection.end ? options.separator+_dateToString(newSelection.end) : '')
+                        : _dateToString(newSelection.begin || newSelection.end || newSelection);
       fireEvent(element, 'change');
 
       setTimeout(_blur,200);
@@ -671,6 +753,9 @@
     _init();
 
   },
+  /*
+    Helper Functions
+  */
   extend = function(){
     for(var i=1; i<arguments.length; i++)
         for(var key in arguments[i])

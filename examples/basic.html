@@ -19,12 +19,12 @@
       .ccal .calbody li.preselected span { background: #f0f0f0; }
       .ccal * { -moz-user-select: -moz-none; -khtml-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none; }
       .today { font-weight: bold; }
-      .calendar-canvas { 
+      .calendar-canvas {
         text-align: center;
         background: white;
-        v-moz-box-shadow: 0 3px 4px #999999; 
-        -moz-box-shadow: 0 3px 4px #999999; 
-        -webkit-box-shadow: 0 3px 4px #999999; 
+        -moz-box-shadow: 0 3px 4px #999999;
+        -moz-box-shadow: 0 3px 4px #999999;
+        -webkit-box-shadow: 0 3px 4px #999999;
         box-shadow: 0 1px 2px #999999;
       }
 
@@ -33,7 +33,9 @@
 
       function onload() {
 
-        setCibulCalendar('datespan');
+        setCibulCalendar('datespan', {
+          range: true
+        });
 
       }
 
@@ -41,7 +43,7 @@
   </head>
   <body onload="onload()">
     <div class="content">
-      <input type="text" id="datespan"/> 
+      <input type="text" id="datespan"/>
     </div>
   </body>
 </html>
