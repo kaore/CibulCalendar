@@ -204,16 +204,6 @@
 
       var self = this;
 
-      addEvent(listItem, ['click', 'touchend'], function (event) {
-
-        if (!self.enabled) return;
-
-        console.log('loge');
-
-        self._handleClick(listItem, event);
-
-      });
-
       addEvent(listItem, ['touchstart', 'mousedown'], function(event) {
 
         if (self.selecting || !self.enabled) return;
@@ -252,26 +242,12 @@
 
       });
     },
-    _handleClick: function (listItem, event) {
-
-      // console.log('listItem', listItem);
-      // console.log('this.anchorDate ', this.anchorDate);
-      // console.log('this.preSelection', this.preSelection);
-      // console.log('this.selection', this.selection);
-
-      if (!this.selection.begin) {
-
-      }
-
-    },
     _preventDefaultBodyMove: function (event) {
       if (event.preventDefault) event.preventDefault();
     },
     _beginPreselection: function (listItem) {
 
       if (hasTouch) addEvent(document.getElementsByTagName('body')[0],'touchmove', this._preventDefaultBodyMove);
-
-      // this.selection = false;
 
       this.currentListItem = listItem;
 
@@ -282,7 +258,6 @@
           this.preSelection = { begin: this.anchorDate };
         }
         else {
-          // !!!!!!!!!!!!!!!!!!!!
           this.preSelection = { begin: this.anchorDate, end: this.anchorDate };
         }
       }
@@ -308,7 +283,6 @@
         else if (date > this.anchorDate) {
           this.preSelection = { begin: this.anchorDate, end: date }
         }
-        // this.preSelection = (date < this.anchorDate) ? { begin: date, end: this.anchorDate } : { begin: this.anchorDate, end: date };
       }
       else {
         this.preSelection = { begin: date, end: date };
@@ -361,7 +335,8 @@
 
           if (toggle == 'next') {
             self.showNext();
-          } else if (toggle == 'prev') {
+          }
+          else if (toggle == 'prev') {
             self.showPrevious();
           }
 
@@ -369,7 +344,8 @@
 
         }, this.options.switchMonthOnHoverDelay);
 
-      } else {
+      }
+      else {
 
         this._clearHoverTimer();
 
@@ -505,7 +481,8 @@
           classes.push(this.options.classes.prevMonthDate);
           varMonth = -1;
 
-        } else {
+        }
+        else {
 
           //
           if ((i>27) && (mSi<13)) {
@@ -570,19 +547,22 @@
 
           return;
 
-        } else {
+        }
+        else {
 
           // set origin calendar if does not exist and render current month calendar
           if (!getElementsByClassName(this.element, this.options.classes.originCalendar).length) {
             getElementsByClassName(this.element, this.options.classes.calendar)[0].setAttribute('style', 'display:none;');
             getElementsByClassName(this.element, this.options.classes.calendar)[0].className = this.options.classes.originCalendar;
-          } else {
+          }
+          else {
             this.element.removeChild(getElementsByClassName(this.element, this.options.classes.calendar)[0]);
           }
 
         }
 
-      } else {
+      }
+      else {
 
         if (getElementsByClassName(this.element, this.options.classes.calendar).length)
           this.element.removeChild(getElementsByClassName(this.element, this.options.classes.calendar)[0]);
@@ -787,9 +767,11 @@
     forEach(types, function(type){
       if ( elem.addEventListener ) {
         elem.addEventListener( type, eventHandle, false);
-      } else if ( elem.attachEvent ) {
+      }
+      else if ( elem.attachEvent ) {
           elem.attachEvent( "on" + type, eventHandle );
-      } else {
+      }
+      else {
           elem["on"+type]=eventHandle;
       }
     });
@@ -800,7 +782,8 @@
     forEach(types, function(type){
       if ("fireEvent" in elem) {
         elem.fireEvent(type);
-      } else {
+      }
+      else {
         var evt = document.createEvent("HTMLEvents");
         evt.initEvent(type, false, true);
         elem.dispatchEvent(evt);
@@ -841,7 +824,8 @@
   elementFromPointIsUsingViewPortCoordinates = function() {
     if (window.pageYOffset > 0) {     // page scrolled down
       return (window.document.elementFromPoint(0, window.pageYOffset + window.innerHeight -1) == null);
-    } else if (window.pageXOffset > 0) {   // page scrolled to the right
+    }
+    else if (window.pageXOffset > 0) {   // page scrolled to the right
       return (window.document.elementFromPoint(window.pageXOffset + window.innerWidth -1, 0) == null);
     }
     return false; // no scrolling, don't care
@@ -849,7 +833,8 @@
   elementFromDocumentPoint = function(x,y) {
     if (elementFromPointIsUsingViewPortCoordinates()){
       return window.document.elementFromPoint(x - window.pageXOffset, y - window.pageYOffset);
-    } else {
+    }
+    else {
       return window.document.elementFromPoint(x,y);
     }
   };
