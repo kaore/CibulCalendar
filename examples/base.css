@@ -1,0 +1,71 @@
+.ccal {
+  font-size: 0.8em;
+}
+
+.ccal:before,
+.ccal:after {
+  content: " ";
+  display: table;
+}
+.ccal:after {
+  clear: both;
+}
+.calmonth {
+  display: inline;
+  height: auto;
+  float: left;
+}
+
+.ccal .calmonth {
+  width: 18em;
+}
+.ccal ul {
+  margin: 0;
+  padding: 0!important;
+  text-align: center;
+}
+.ccal li {
+  list-style-type: none;
+  display: inline-block;
+  width: 13.2% ;
+  cursor: pointer;
+  text-align: center;
+  margin: 0;
+}
+.ccal li span {
+  display: inline-block;
+  line-height: 1.8em;
+}
+.ccal li.caltitle {
+  width: 66%;
+}
+.ccal li span {
+  padding: 0.1em 0.05em;
+  display: block;
+}
+.ccal li.calprev span,
+.ccal li.calnext span {
+  color: #aaa;
+}
+.ccal .calbody li.selected span {
+  background: #666;
+  color: white;
+}
+.ccal .calbody li.preselected span {
+  background: #f0f0f0;
+}
+.ccal * {
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.ccal .today {
+  font-weight: bold;
+}
+.calendar-canvas {
+  text-align: center;
+  background: white;
+  box-shadow: 0 1px 2px #999999;
+}
