@@ -356,9 +356,9 @@
           dateValue = parseInt(liElement.getElementsByTagName('span')[0].innerHTML, 10),
           displayedMonth = _getActiveMonth(liElement);
 
-      if ((ulIndex==0) && (dateValue>10)) incMonth = -1;
+      if ((ulIndex == 0) && (dateValue > 10)) incMonth = -1;
 
-      if ((ulIndex>=4) && (dateValue<15)) incMonth = 1;
+      if ((ulIndex >= 4) && (dateValue < 12)) incMonth = 1;
 
       return new Date(displayedMonth.getFullYear(), displayedMonth.getMonth() + incMonth, dateValue);
 
@@ -504,7 +504,7 @@
             varMonth = -1;
 
           }
-          else if ((i > 27) && (mSi < 15)) {
+          else if ((i > 27) && (mSi < 13)) {
 
             classes.push(self.options.classes.nextMonthDate);
             varMonth = 1;
@@ -608,10 +608,10 @@
       // every day of the month is now in the stack,
       // shove in days of previous month
 
-      day = new Date (year, month, 1);
+      day = new Date(year, month, 1);
 
-      offsetDays = (day.getDay() - options.firstDayOfWeek) % 7;
-      offsetDays = offsetDays < 0 ? offsetDays+7 : offsetDays;
+      offsetDays = (day.getDay() - self.options.firstDayOfWeek) % 7;
+      offsetDays = offsetDays < 0 ? offsetDays + 7 : offsetDays;
 
       while (offsetDays--) {
 
@@ -723,6 +723,7 @@
       These are what you will see when accessing calendar object
      */
     
+    return self;
     return {
       show: show,
       hide: hide,
