@@ -1,0 +1,4 @@
+node_modules/**
+app.js
+npm-debug.log
+package.json

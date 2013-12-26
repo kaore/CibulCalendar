@@ -98,6 +98,8 @@
       this._decDisplayedMonth();
 
     },
+
+
     setSelected: function (selected, updateMonth) {
 
       if (selected) {
@@ -162,16 +164,21 @@
       return getElementsByClassName(getElementsByClassName(this.displayedCalendarElement, this.options.classes.calendarBody)[0], this.options.classes.selected);
 
     },
+
+
+    /*
+        Event Listeners
+    */
     _applyBehavior: function () {
 
       var self = this;
 
-      // show previous calendar on show previous
-
+      // add event listener to first previous button button
       addEvent(getElementsByClassName(this.displayedCalendarElement, this.options.classes.navDomPrev).shift(), 'click', function(listItem) {
         self.showPrevious();
       });
 
+      // add event listener to last next month button
       addEvent(getElementsByClassName(this.displayedCalendarElement, this.options.classes.navDomNext).pop(), 'click', function(listItem) {
         self.showNext();
       });
@@ -362,20 +369,12 @@
       this.hoverTimer = undefined;
 
     },
-    _getDateFromElement: function (liElement) {
 
-      var ulIndex = getChildIndex(liElement.parentNode),
-          incMonth = 0,
-          dateValue = parseInt(liElement.getElementsByTagName('span')[0].innerHTML, 10),
-          displayedMonth = this._getActiveMonth(liElement);
 
-      if ((ulIndex==0) && (dateValue>10)) incMonth = -1;
-
-      if ((ulIndex>=4) && (dateValue<12)) incMonth = 1;
-
-      return new Date(displayedMonth.getFullYear(), displayedMonth.getMonth() + incMonth, dateValue);
-
-    },
+    /*
+        this.displayedMonth is the first month in display
+        Setter, Getter, etc for this.displayedMonth follows
+     */
     _incDisplayedMonth: function () {
 
       var displayedMonth = this._getDisplayedMonth();
@@ -401,9 +400,6 @@
       this._renderCalendar();
 
     },
-    _getActiveMonth: function (listItem) {
-      return new Date(parseInt(closest(listItem, 'calmonth').getAttribute('data-date'), 10));
-    },
     _getDisplayedMonth: function () {
 
       if (typeof this.displayedMonth == 'undefined') this.displayedMonth = new Date();
@@ -411,6 +407,48 @@
       return this.displayedMonth;
 
     },
+
+    /*
+      Returns full date of date DOM element
+     */
+    _getDateFromElement: function (liElement) {
+
+      var ulIndex = getChildIndex(liElement.parentNode),
+          incMonth = 0,
+          dateValue = parseInt(liElement.getElementsByTagName('span')[0].innerHTML, 10),
+          displayedMonth = this._getActiveMonth(liElement);
+
+      if ((ulIndex==0) && (dateValue>10)) incMonth = -1;
+
+      if ((ulIndex>=4) && (dateValue<12)) incMonth = 1;
+
+      return new Date(displayedMonth.getFullYear(), displayedMonth.getMonth() + incMonth, dateValue);
+
+    },
+    /*
+      Returns actual month of date DOM element
+     */
+    _getActiveMonth: function (liElement) {
+
+      return new Date(parseInt(closest(liElement, 'calmonth').getAttribute('data-date'), 10));
+
+    },
+    /*
+      Returns element from coordinates
+     */
+    _getActualListItem: function (listItem, event) {
+
+      if (typeof event == 'undefined') return listItem;
+      if (typeof event.touches == 'undefined') return listItem;
+
+      return elementFromDocumentPoint(event.touches[0].pageX, event.touches[0].pageY).parentNode
+
+    },
+
+
+    /*
+      Render functions
+     */
     _clearSelectionRender: function () {
 
       var self = this;
@@ -677,14 +715,6 @@
 
       return ((dateString >= rangeStrings.begin) && (dateString <= rangeStrings.end));
 
-    },
-    _getActualListItem: function(listItem, event) {
-
-      if (typeof event == 'undefined') return listItem;
-      if (typeof event.touches == 'undefined') return listItem;
-
-      return elementFromDocumentPoint(event.touches[0].pageX, event.touches[0].pageY).parentNode
-
     }
   };
 
@@ -695,76 +725,84 @@
     // on click elsewhere need to hide it
 
     var element = document.getElementById(elementId),
-    calCanvas,
-    calendar,
-    inFocus = false,
-    _init = function () {
-      options = extend({
-        onSelect: _onSelect,
-        separator: ' - ',
-        canvasClass: 'calendar-canvas',
-        offset: { top: 5, left: 0 }
-      }, options ? options : {});
+      calCanvas,
+      calendar,
+      inFocus = false,
+      _init = function () {
+        options = extend({
+          onSelect: _onSelect,
+          separator: ' - ',
+          canvasClass: 'calendar-canvas',
+          offset: { top: 5, left: 0 }
+        }, options ? options : {});
 
-      addEvent(element, 'click', _focus);
-      addEvent(document.getElementsByTagName('body')[0], 'click', function () {
-        if (!inFocus) _blur();
-        inFocus = false;
-      });
-    },
-    _focus = function () {
-      inFocus = true;
-      if (!calCanvas) _createCalendar();
+        addEvent(element, 'click', _focus);
+        addEvent(document.getElementsByTagName('body')[0], 'click', function () {
+          if (!inFocus) _blur();
+          inFocus = false;
+        });
+      },
+      _focus = function () {
+        inFocus = true;
+        if (!calCanvas) _createCalendar();
 
-      extend(calCanvas.style, {
-        // position: 'absolute',
-        top: (element.offsetTop + element.offsetHeight + options.offset.top) + 'px',
-        left: element.offsetLeft + options.offset.left + 'px'
-      });
+        extend(calCanvas.style, {
+          // position: 'absolute',
+          top: (element.offsetTop + element.offsetHeight + options.offset.top) + 'px',
+          left: element.offsetLeft + options.offset.left + 'px'
+        });
 
-      calCanvas.style.display = 'block';
+        calCanvas.style.display = 'block';
 
-      element.blur();
-    },
-    _blur = function () {
-      if (calCanvas) calCanvas.style.display = 'none';
-    },
-    _createCalendar = function () {
+        element.blur();
+      },
+      _blur = function () {
+        if (calCanvas) {
+          calCanvas.style.display = 'none';
+        }
+      },
+      _createCalendar = function () {
 
-      calCanvas = document.createElement('div');
-      calCanvas.className = options.canvasClass;
+        calCanvas = document.createElement('div');
+        calCanvas.className = options.canvasClass;
 
-      if (!element.parentNode.style.position) element.parentNode.style.position = 'relative';
+        if (!element.parentNode.style.position) {
+          element.parentNode.style.position = 'relative';
+        }
 
-      // calCanvas.style.position = 'absolute';
+        // calCanvas.style.position = 'absolute';
 
-      addEvent(calCanvas, 'click', _focus);
+        addEvent(calCanvas, 'click', _focus);
 
-      element.parentNode.appendChild(calCanvas);
+        element.parentNode.appendChild(calCanvas);
 
-      return new CibulCalendar(calCanvas, options);
+        return new CibulCalendar(calCanvas, options);
 
-    },
-    _onSelect = function (newSelection) {
+      },
+      _onSelect = function (newSelection) {
 
-      element.value = _dateToString(newSelection.begin||newSelection) + 
-          (newSelection.end && newSelection.begin != newSelection.end ? options.separator + _dateToString(newSelection.end) : '');
+        element.value = _dateToString(newSelection.begin||newSelection) + 
+            (newSelection.end && newSelection.begin != newSelection.end ? options.separator + _dateToString(newSelection.end) : '');
 
-      fireEvent(element, 'change');
+        fireEvent(element, 'change');
 
-      if (calendar.options.range && !calendar.selection.end) {
-        return;
-      }
-      else {
-        setTimeout(_blur,200);
-      }
-    },
-    _dateToString = function(date) {
-      return _fZ(date.getMonth()+1) + '/' + _fZ(date.getDate()) + '/' + date.getFullYear();
-    },
-    _fZ = function(n) {
-      return (n>9?'':'0') + n;
-    };
+        if (calendar.options.range && !calendar.selection.end) {
+          return;
+        }
+        else {
+          setTimeout(_blur,200);
+        }
+      },
+      _dateToString = function (date) {
+
+        return _fZ(date.getMonth()+1) + '/' + _fZ(date.getDate()) + '/' + date.getFullYear();
+
+      },
+      _fZ = function (n) {
+
+        return (n > 9 ? '' : '0') + n;
+
+      };
 
     _init();
     calendar = _createCalendar();
@@ -788,8 +826,9 @@
     var a = [];
     var re = new RegExp('(^| )'+classname+'( |$)');
     var els = node.getElementsByTagName("*");
-    for(var i=0,j=els.length; i<j; i++)
-        if(re.test(els[i].className))a.push(els[i]);
+    for (var i=0, j=els.length; i<j; i++) {
+      if(re.test(els[i].className))a.push(els[i]);
+    }
     return a;
   },
   isElement = function(o){
@@ -832,6 +871,9 @@
       }
     });
   },
+  /*
+    IE ...
+   */
   makeUnselectable = function(node) {
     if (node.nodeType == 1) node.setAttribute("unselectable", "on");
 
