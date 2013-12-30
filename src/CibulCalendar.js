@@ -20,11 +20,11 @@
     },
     disable = function () {
       self.enabled = false;
-      addClass(getElementsByClassName(self.element, self.options.classes.calendar)[0], self.options.classes.disabled);
+      addClass(getElementsByClassName(self.element, self.options.classes.main)[0], self.options.classes.disabled);
     },
     enable = function () {
       self.enabled = true;
-      removeClass(getElementsByClassName(self.element, self.options.classes.calendar)[0], self.options.classes.disabled);
+      removeClass(getElementsByClassName(self.element, self.options.classes.main)[0], self.options.classes.disabled);
     },
     showNext = function () {
 
@@ -103,7 +103,7 @@
     },
     _getSelectedElements = function () {
 
-      return getElementsByClassName(getElementsByClassName(self.displayedCalendarElement, self.options.classes.calendarBody)[0], self.options.classes.selected);
+      return getElementsByClassName(getElementsByClassName(self.displayedCalendarElement, self.options.classes.body)[0], self.options.classes.selected);
 
     },
 
@@ -114,22 +114,22 @@
     _applyBehavior = function () {
 
       // add event listener to first previous button button
-      addEvent(getElementsByClassName(self.displayedCalendarElement, self.options.classes.navDomPrev).shift(), 'click', function(listItem) {
+      addEvent(getElementsByClassName(self.displayedCalendarElement, self.options.classes.prev).shift(), 'click', function(listItem) {
         showPrevious();
       });
 
       // add event listener to last next month button
-      addEvent(getElementsByClassName(self.displayedCalendarElement, self.options.classes.navDomNext).pop(), 'click', function(listItem) {
+      addEvent(getElementsByClassName(self.displayedCalendarElement, self.options.classes.next).pop(), 'click', function(listItem) {
         showNext();
       });
 
       // selection behavior on date elements
-      forEach(self.displayedCalendarElement.querySelectorAll('.'+self.options.classes.calendarBody + ' li'), function(listItem) {
+      forEach(self.displayedCalendarElement.querySelectorAll('.'+self.options.classes.body + ' li'), function(listItem) {
         _applySelectionBehavior(listItem);
       });
 
       // selection behavior on month click
-      forEach(self.displayedCalendarElement.querySelectorAll('.'+self.options.classes.month), function (listItem) {
+      forEach(self.displayedCalendarElement.querySelectorAll('.'+self.options.classes.title), function (listItem) {
         addEvent(listItem, 'click', function (event) {
           _selectMonth(event);
         });
@@ -368,7 +368,7 @@
      */
     _getActiveMonth = function (liElement) {
 
-      return new Date(parseInt(closest(liElement, 'calendar-month').getAttribute('data-date'), 10));
+      return new Date(parseInt(closest(liElement, self.options.classes.month).getAttribute('data-date'), 10));
 
     },
     /*
@@ -391,7 +391,7 @@
 
       if (!self.displayedCalendarElement) return;
 
-      forEach(self.displayedCalendarElement.querySelectorAll('.'+self.options.classes.calendarBody + ' .' + self.options.classes.selected), function(listItem) {
+      forEach(self.displayedCalendarElement.querySelectorAll('.'+self.options.classes.body + ' .' + self.options.classes.selected), function(listItem) {
 
         removeClass(listItem, self.options.classes.selected);
 
@@ -411,7 +411,7 @@
         currentMonth,
         preSelection = (typeof preSelection == 'undefined') ? false : preSelection;
 
-      forEach(self.displayedCalendarElement.querySelectorAll('.'+self.options.classes.calendarBody+' li'), function (listItem) {
+      forEach(self.displayedCalendarElement.querySelectorAll('.'+self.options.classes.body+' li'), function (listItem) {
 
         classes = [];
 
@@ -419,11 +419,11 @@
 
         iDate = _getDateFromElement(listItem);
 
-        if (_isWithinRange(iDate, selection)) classes.push(preSelection ? self.options.classes.preSelected : self.options.classes.selected);
+        if (_isWithinRange(iDate, selection)) classes.push(preSelection ? self.options.classes.preselected : self.options.classes.selected);
 
         if (_isToday(iDate)) classes.push(self.options.classes.today);
 
-        if (currentMonth != iDate.getMonth()) classes.push(self.options.classes[i++ < 7 ? 'prevMonthDate' : 'nextMonthDate']);
+        if (currentMonth != iDate.getMonth()) classes.push(self.options.classes[i++ < 7 ? 'prevMonth' : 'nextMonth']);
 
         if (self.options.filter) classes = self.options.filter(iDate, classes);
 
@@ -456,12 +456,12 @@
         render = template;
 
         // render class names
-        render = render.replace('#calendar-body', self.options.classes.calendarBody);
-        render = render.replace('#calendar-prev-month', self.options.classes.navDomPrev);
-        render = render.replace('#calendar-next-month', self.options.classes.navDomNext);
-        render = render.replace('#calendar-title', self.options.classes.monthTitle);
+        render = render.replace('#calendar-body', self.options.classes.body);
+        render = render.replace('#calendar-prev-month', self.options.classes.prev);
+        render = render.replace('#calendar-next-month', self.options.classes.next);
+        render = render.replace('#calendar-title', self.options.classes.title);
 
-        render = render.replace('#calendar-month', self.options.classes.monthContainer);
+        render = render.replace('#calendar-month', self.options.classes.month);
         render = render.replace('#calendar-head', self.options.classes.head);
         render = render.replace('#calendar-month-nav', self.options.classes.navigation);
         render = render.replace('#calendar-week-days', self.options.classes.weekDays);
@@ -514,13 +514,13 @@
 
           if ((i < 7) && (mSi > 10)) {
 
-            classes.push(self.options.classes.prevMonthDate);
+            classes.push(self.options.classes.prevMonth);
             varMonth = -1;
 
           }
           else if ((i > 27) && (mSi < 13)) {
 
-            classes.push(self.options.classes.nextMonthDate);
+            classes.push(self.options.classes.nextMonth);
             varMonth = 1;
 
           }
@@ -561,10 +561,10 @@
           && (displayedMonth.getFullYear() == self.anchorDate.getFullYear())
           && (getElementsByClassName(self.element, self.options.classes.originCalendar).length)) {
 
-          self.element.removeChild(getElementsByClassName(self.element, self.options.classes.calendar)[0]);
+          self.element.removeChild(getElementsByClassName(self.element, self.options.classes.main)[0]);
 
           getElementsByClassName(self.element, self.options.classes.originCalendar)[0].setAttribute('style', 'display:block;');
-          getElementsByClassName(self.element, self.options.classes.originCalendar)[0].className = self.options.classes.calendar;
+          getElementsByClassName(self.element, self.options.classes.originCalendar)[0].className = self.options.classes.main;
 
           return;
 
@@ -573,11 +573,11 @@
 
           // set origin calendar if does not exist and render current month calendar
           if (!getElementsByClassName(self.element, self.options.classes.originCalendar).length) {
-            getElementsByClassName(self.element, self.options.classes.calendar)[0].setAttribute('style', 'display:none;');
-            getElementsByClassName(self.element, self.options.classes.calendar)[0].className = self.options.classes.originCalendar;
+            getElementsByClassName(self.element, self.options.classes.main)[0].setAttribute('style', 'display:none;');
+            getElementsByClassName(self.element, self.options.classes.main)[0].className = self.options.classes.originCalendar;
           }
           else {
-            self.element.removeChild(getElementsByClassName(self.element, self.options.classes.calendar)[0]);
+            self.element.removeChild(getElementsByClassName(self.element, self.options.classes.main)[0]);
           }
 
         }
@@ -585,19 +585,19 @@
       }
       else {
 
-        if (getElementsByClassName(self.element, self.options.classes.calendar).length) {
-          self.element.removeChild(getElementsByClassName(self.element, self.options.classes.calendar)[0]);
+        if (getElementsByClassName(self.element, self.options.classes.main).length) {
+          self.element.removeChild(getElementsByClassName(self.element, self.options.classes.main)[0]);
         }
 
       }
 
       var eltToDisplay = document.createElement('div');
-      eltToDisplay.className = self.options.classes.calendar;
+      eltToDisplay.className = self.options.classes.main;
       eltToDisplay.innerHTML = _generateCalendarHTML(displayedMonth);
 
       self.element.appendChild(eltToDisplay);
 
-      self.displayedCalendarElement = getElementsByClassName(self.element, self.options.classes.calendar)[0];
+      self.displayedCalendarElement = getElementsByClassName(self.element, self.options.classes.main)[0];
 
       makeUnselectable(self.element);
 
@@ -686,20 +686,20 @@
         monthSpan: 1,
         template: '<div class="#calendar-month" data-date="#date"><div class="#calendar-head"><ul class="#calendar-month-nav"><li class="#calendar-prev-month"><span>#navprev</span></li><li class="#calendar-title"><span>#title</span></li><li class="#calendar-next-month"><span>#navnext</span></li></ul><ul class="#calendar-week-days"><li><span>#wd0</span></li><li><span>#wd1</span></li><li><span>#wd2</span></li><li><span>#wd3</span></li><li><span>#wd4</span></li><li><span> #wd5 </span></li><li><span> #wd6 </span></li></ul></div><div class="#calendar-body"><ul><li#cls00><span> #d00 </span></li><li#cls01><span> #d01 </span></li><li#cls02><span> #d02 </span></li><li#cls03><span> #d03 </span></li><li#cls04><span> #d04 </span></li><li#cls05><span> #d05 </span></li><li#cls06><span> #d06 </span></li></ul><ul><li#cls07><span> #d07 </span></li><li#cls08><span> #d08 </span></li><li#cls09><span> #d09 </span></li><li#cls10><span> #d10 </span></li><li#cls11><span> #d11 </span></li><li#cls12><span> #d12 </span></li><li#cls13><span> #d13 </span></li></ul><ul><li#cls14><span> #d14 </span></li><li#cls15><span> #d15 </span></li><li#cls16><span> #d16 </span></li><li#cls17><span> #d17 </span></li><li#cls18><span> #d18 </span></li><li#cls19><span> #d19 </span></li><li#cls20><span> #d20 </span></li></ul><ul><li#cls21><span> #d21 </span></li><li#cls22><span> #d22 </span></li><li#cls23><span> #d23 </span></li><li#cls24><span> #d24 </span></li><li#cls25><span> #d25 </span></li><li#cls26><span> #d26 </span></li><li#cls27><span> #d27 </span></li></ul><ul><li#cls28><span> #d28 </span></li><li#cls29><span> #d29 </span></li><li#cls30><span> #d30 </span></li><li#cls31><span> #d31 </span></li><li#cls32><span> #d32 </span></li><li#cls33><span> #d33 </span></li><li#cls34><span> #d34 </span></li></ul><ul><li#cls35><span> #d35 </span></li><li#cls36><span> #d36 </span></li><li#cls37><span> #d37 </span></li><li#cls38><span> #d38 </span></li><li#cls39><span> #d39 </span></li><li#cls40><span> #d40 </span></li><li#cls41><span> #d41 </span></li></ul></div></div>',
         classes: extend({
-          monthContainer: 'calendar-month',
+          main: 'calendar-main',
+          month: 'calendar-month',
           head: 'calendar-head',
           navigation: 'calendar-month-nav',
+          title: 'calendar-title',
+          prev: 'calendar-prev',
+          next: 'calendar-next',
           weekDays: 'calendar-week-days',
-          calendar: 'calendar-main',
-          navDomPrev: 'calendar-prev',
-          navDomNext: 'calendar-next',
-          calendarBody: 'calendar-body',
-          selected: 'calendar-selected',
-          preSelected: 'calendar-preselected',
+          body: 'calendar-body',
           today: 'calendar-today',
-          monthTitle: 'calendar-title',
-          prevMonthDate: 'calendar-prev-month',
-          nextMonthDate: 'calendar-next-month',
+          selected: 'calendar-selected',
+          preselected: 'calendar-preselected',
+          prevMonth: 'calendar-prev-month',
+          nextMonth: 'calendar-next-month',
           disabled: 'calendar-disabled',
           originCalendar: 'calendar-origin',
         }, options.classes ? options.classes : {}),
