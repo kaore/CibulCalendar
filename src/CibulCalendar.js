@@ -843,7 +843,7 @@
 
 
     if (!element) {
-      throw "Calendar needs an element to attach to";
+      throw "Calendar needs a base element to attach to";
     }
 
     _init();
@@ -914,10 +914,10 @@
       }
     });
   },
-  /*
-    IE ...
-   */
   makeUnselectable = function(node) {
+    /* IE < 11 */
+    if (window && window.navigator && !window.navigator.userAgent.match(/msie/i)) return;
+
     if (node.nodeType == 1) node.setAttribute("unselectable", "on");
 
     var child = node.firstChild;
