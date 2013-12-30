@@ -12,12 +12,12 @@
     </style>
     <script type="text/javascript">
       function onload() {
-        window.cal = new CibulCalendar('.calendar', {
+        window.cal = new CibulCalendar('#datespan', {
           range: true,
           monthSpan: 3,
           switchMonthOnHoverDelay: 400,
-          open: false,
-          inline: true
+          open: false/*,
+          inline: true*/
         });
 
       }
@@ -33,3 +33,4 @@
   <script src="../src/CibulCalendar.js" type="text/javascript"></script>
   </body>
 </html>
+

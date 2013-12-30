@@ -368,7 +368,7 @@
      */
     _getActiveMonth = function (liElement) {
 
-      return new Date(parseInt(closest(liElement, 'calmonth').getAttribute('data-date'), 10));
+      return new Date(parseInt(closest(liElement, 'calendar-month').getAttribute('data-date'), 10));
 
     },
     /*
@@ -454,6 +454,17 @@
 
         // grab the template
         render = template;
+
+        // render class names
+        render = render.replace('#calendar-body', self.options.classes.calendarBody);
+        render = render.replace('#calendar-prev-month', self.options.classes.navDomPrev);
+        render = render.replace('#calendar-next-month', self.options.classes.navDomNext);
+        render = render.replace('#calendar-title', self.options.classes.monthTitle);
+
+        render = render.replace('#calendar-month', self.options.classes.monthContainer);
+        render = render.replace('#calendar-head', self.options.classes.head);
+        render = render.replace('#calendar-month-nav', self.options.classes.navigation);
+        render = render.replace('#calendar-week-days', self.options.classes.weekDays);
 
         // render title
         render = render.replace('#title', self.options.monthNames[self.options.lang][displayedMonth.getMonth()] + ' ' + displayedMonth.getFullYear());
@@ -673,20 +684,24 @@
         open: false,
         inline: false,
         monthSpan: 1,
-        template: '<div class="calmonth" data-date="#date"><div class="calhead"><ul class="calmonthnav"><li class="calprevmonth"><span>#navprev</span></li><li class="caltitle"><span class="month">#title</span></li><li class="calnextmonth"><span>#navnext</span></li></ul><ul class="calweekdays"><li><span>#wd0</span></li><li><span>#wd1</span></li><li><span>#wd2</span></li><li><span>#wd3</span></li><li><span>#wd4</span></li><li><span>#wd5</span></li><li><span>#wd6</span></li></ul></div><div class="calbody"><ul><li#cls00><span>#d00</span></li><li#cls01><span>#d01</span></li><li#cls02><span>#d02</span></li><li#cls03><span>#d03</span></li><li#cls04><span>#d04</span></li><li#cls05><span>#d05</span></li><li#cls06><span>#d06</span></li></ul><ul><li#cls07><span>#d07</span></li><li#cls08><span>#d08</span></li><li#cls09><span>#d09</span></li><li#cls10><span>#d10</span></li><li#cls11><span>#d11</span></li><li#cls12><span>#d12</span></li><li#cls13><span>#d13</span></li></ul><ul><li#cls14><span>#d14</span></li><li#cls15><span>#d15</span></li><li#cls16><span>#d16</span></li><li#cls17><span>#d17</span></li><li#cls18><span>#d18</span></li><li#cls19><span>#d19</span></li><li#cls20><span>#d20</span></li></ul><ul><li#cls21><span>#d21</span></li><li#cls22><span>#d22</span></li><li#cls23><span>#d23</span></li><li#cls24><span>#d24</span></li><li#cls25><span>#d25</span></li><li#cls26><span>#d26</span></li><li#cls27><span>#d27</span></li></ul><ul><li#cls28><span>#d28</span></li><li#cls29><span>#d29</span></li><li#cls30><span>#d30</span></li><li#cls31><span>#d31</span></li><li#cls32><span>#d32</span></li><li#cls33><span>#d33</span></li><li#cls34><span>#d34</span></li></ul><ul><li#cls35><span>#d35</span></li><li#cls36><span>#d36</span></li><li#cls37><span>#d37</span></li><li#cls38><span>#d38</span></li><li#cls39><span>#d39</span></li><li#cls40><span>#d40</span></li><li#cls41><span>#d41</span></li></ul></div></div>',
+        template: '<div class="#calendar-month" data-date="#date"><div class="#calendar-head"><ul class="#calendar-month-nav"><li class="#calendar-prev-month"><span>#navprev</span></li><li class="#calendar-title"><span>#title</span></li><li class="#calendar-next-month"><span>#navnext</span></li></ul><ul class="#calendar-week-days"><li><span>#wd0</span></li><li><span>#wd1</span></li><li><span>#wd2</span></li><li><span>#wd3</span></li><li><span>#wd4</span></li><li><span> #wd5 </span></li><li><span> #wd6 </span></li></ul></div><div class="#calendar-body"><ul><li#cls00><span> #d00 </span></li><li#cls01><span> #d01 </span></li><li#cls02><span> #d02 </span></li><li#cls03><span> #d03 </span></li><li#cls04><span> #d04 </span></li><li#cls05><span> #d05 </span></li><li#cls06><span> #d06 </span></li></ul><ul><li#cls07><span> #d07 </span></li><li#cls08><span> #d08 </span></li><li#cls09><span> #d09 </span></li><li#cls10><span> #d10 </span></li><li#cls11><span> #d11 </span></li><li#cls12><span> #d12 </span></li><li#cls13><span> #d13 </span></li></ul><ul><li#cls14><span> #d14 </span></li><li#cls15><span> #d15 </span></li><li#cls16><span> #d16 </span></li><li#cls17><span> #d17 </span></li><li#cls18><span> #d18 </span></li><li#cls19><span> #d19 </span></li><li#cls20><span> #d20 </span></li></ul><ul><li#cls21><span> #d21 </span></li><li#cls22><span> #d22 </span></li><li#cls23><span> #d23 </span></li><li#cls24><span> #d24 </span></li><li#cls25><span> #d25 </span></li><li#cls26><span> #d26 </span></li><li#cls27><span> #d27 </span></li></ul><ul><li#cls28><span> #d28 </span></li><li#cls29><span> #d29 </span></li><li#cls30><span> #d30 </span></li><li#cls31><span> #d31 </span></li><li#cls32><span> #d32 </span></li><li#cls33><span> #d33 </span></li><li#cls34><span> #d34 </span></li></ul><ul><li#cls35><span> #d35 </span></li><li#cls36><span> #d36 </span></li><li#cls37><span> #d37 </span></li><li#cls38><span> #d38 </span></li><li#cls39><span> #d39 </span></li><li#cls40><span> #d40 </span></li><li#cls41><span> #d41 </span></li></ul></div></div>',
         classes: extend({
-          calendar: 'ccal',
-          navDomPrev: 'calprevmonth',
-          navDomNext: 'calnextmonth',
-          calendarBody: 'calbody',
-          selected: 'selected',
-          preSelected: 'preselected',
-          today: 'today',
-          month: 'month',
-          prevMonthDate: 'calprev',
-          nextMonthDate: 'calnext',
-          disabled: 'disabled',
-          originCalendar: 'origincal',
+          monthContainer: 'calendar-month',
+          head: 'calendar-head',
+          navigation: 'calendar-month-nav',
+          weekDays: 'calendar-week-days',
+          calendar: 'calendar-main',
+          navDomPrev: 'calendar-prev',
+          navDomNext: 'calendar-next',
+          calendarBody: 'calendar-body',
+          selected: 'calendar-selected',
+          preSelected: 'calendar-preselected',
+          today: 'calendar-today',
+          monthTitle: 'calendar-title',
+          prevMonthDate: 'calendar-prev-month',
+          nextMonthDate: 'calendar-next-month',
+          disabled: 'calendar-disabled',
+          originCalendar: 'calendar-origin',
         }, options.classes ? options.classes : {}),
         navDomContent: { prev: '<', next: '>' },
         monthNames: extend({
@@ -771,14 +786,17 @@
         }
       },
       _focus = function () {
+        var offsetPos;
+
         inFocus = true;
         if (!calCanvas) _createCalendar();
 
-        extend(calCanvas.style, {
-          // position: 'absolute',
-          top: (element.offsetTop + element.offsetHeight + options.offset.top) + 'px',
-          left: element.offsetLeft + options.offset.left + 'px'
-        });
+        offsetPos = offset(element);
+        offsetPos.left += 'px'; 
+        offsetPos.top += element.offsetHeight;
+        offsetPos.top += 'px'; 
+
+        extend(calCanvas.style, offsetPos);
 
         calCanvas.style.display = 'block';
 
@@ -804,11 +822,11 @@
             element.parentNode.style.position = 'relative';
           }
 
-          // calCanvas.style.position = 'absolute';
+          calCanvas.style.position = 'absolute';
 
           addEvent(calCanvas, 'click', _focus);
 
-          element.parentNode.appendChild(calCanvas);
+          document.body.appendChild(calCanvas);
         }
 
         return new CibulCalendar(calCanvas, options);
@@ -885,7 +903,7 @@
       action.apply(this, [array[i]].concat(Array.prototype.splice.call(arguments, 2)));
     }
   },
-  addEvent = function(elem, types, eventHandle) {
+  addEvent = function (elem, types, eventHandle) {
     if (elem == null || elem == undefined) return;
     if (typeof types == 'string') types = [types];
     forEach(types, function(type) {
@@ -900,7 +918,7 @@
       }
     });
   },
-  fireEvent = function(elem, types) {
+  fireEvent = function (elem, types) {
     if (elem == null || elem == undefined) return;
     if (typeof types == 'string') types = [types];
     forEach(types, function(type){
@@ -914,7 +932,7 @@
       }
     });
   },
-  makeUnselectable = function(node) {
+  makeUnselectable = function (node) {
     /* IE < 11 */
     if (window && window.navigator && !window.navigator.userAgent.match(/msie/i)) return;
 
@@ -954,6 +972,33 @@
 
     return i;
 
+  },
+  offset = function (element) {
+    var body = document.body,
+      win = document.defaultView,
+      docElem = document.documentElement,
+      box = document.createElement('div'),
+      isBoxModel,
+      clientTop,
+      clientLeft,
+      scrollTop,
+      scrollLeft;
+    
+    box.style.paddingLeft = box.style.width = "1px";
+    body.appendChild(box);
+    isBoxModel = box.offsetWidth == 2;
+    body.removeChild(box);
+    box = element.getBoundingClientRect();
+  
+    clientTop  = docElem.clientTop  || body.clientTop  || 0,
+    clientLeft = docElem.clientLeft || body.clientLeft || 0,
+    scrollTop  = win.pageYOffset || isBoxModel && docElem.scrollTop  || body.scrollTop,
+    scrollLeft = win.pageXOffset || isBoxModel && docElem.scrollLeft || body.scrollLeft;
+    
+    return {
+      top : box.top  + scrollTop  - clientTop,
+      left: box.left + scrollLeft - clientLeft
+    };
   },
   hasClass = function(element, cls) { return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1; },
   addClass = function(element, className) { if (!hasClass(element, className)) element.className = element.className + ' ' + className; },
