@@ -372,7 +372,7 @@
 
     },
     /*
-      Returns element from coordinates
+      Returns element from touch event coordinates
      */
     _getActualListItem = function (listItem, event) {
 
@@ -452,8 +452,11 @@
 
         dayStack = _getDayStack(displayedMonth.getMonth(), displayedMonth.getFullYear());
 
+        // grab the template
+        render = template;
+
         // render title
-        render = template.replace('#title', self.options.monthNames[self.options.lang][displayedMonth.getMonth()] + ' ' + displayedMonth.getFullYear());
+        render = render.replace('#title', self.options.monthNames[self.options.lang][displayedMonth.getMonth()] + ' ' + displayedMonth.getFullYear());
 
         // render nav icons
         if (m == displayedMonth.getMonth()) {
@@ -462,7 +465,7 @@
         else {
           render = render.replace('#navprev', '');
         }
-        if (displayedMonth.getMonth() == lastMonth.getMonth()-1) {
+        if ((displayedMonth.getMonth()+1)%12 == lastMonth.getMonth()) {
           render = render.replace('#navnext', self.options.navDomContent.next);
         }
         else {
@@ -478,7 +481,7 @@
 
           render = render.replace(regexp, self.options.weekDays[self.options.lang][(i + self.options.firstDayOfWeek)%7]);
 
-        };
+        }
 
         //render days
 
@@ -523,7 +526,7 @@
 
           render = render.replace(regexp, classes.length ? ' class="' + classes.join(' ') + '"':'');
 
-        };
+        }
 
         html += render;
 
