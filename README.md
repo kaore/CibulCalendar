@@ -67,4 +67,4 @@ DMT('#myForm .begin', '#myForm .end', options);
 * **showNext**: render following month
 * **showPrevious**: render previous month
 * **setSelected(newSelection, updateMonth)**: set new selection. newSelection is an object containing two indexes: begin and end, each referring to a date
-* **getSelected**: returns selected date. Returns { being: DATE, end: DATE } if range option is true
+* **getSelected**: returns selected date. Returns { being: Date, end: Date } if range option is true
