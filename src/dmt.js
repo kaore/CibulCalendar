@@ -28,14 +28,18 @@
       },
       showNext = function () {
 
-        if (!self.enabled) return;
+        if (!self.enabled) {
+          return;
+        }
 
         _incDisplayedMonth();
 
       },
       showPrevious = function () {
 
-        if (!self.enabled) return;
+        if (!self.enabled) {
+          return;
+        }
 
         _decDisplayedMonth();
 
@@ -46,9 +50,13 @@
 
         if (selected) {
 
-          if (typeof selected.begin == 'undefined') selected = { begin: selected, end: selected };
+          if (typeof selected.begin === 'undefined') {
+            selected = { begin: selected, end: selected };
+          }
 
-          if (typeof updateMonth == 'undefined') updateMonth = true;
+          if (typeof updateMonth === 'undefined') {
+            updateMonth = true;
+          }
 
 
           if (self.options.range) {
@@ -96,7 +104,9 @@
       },
       _getSelected = function () {
 
-        if (typeof self.selection == 'undefined') self.selection = false;
+        if (typeof self.selection === 'undefined') {
+          self.selection = false;
+        }
 
         return self.selection;
 
@@ -114,17 +124,17 @@
       _applyBehavior = function () {
 
         // add event listener to first previous button button
-        addEvent(getElementsByClassName(self.displayedCalendarElement, self.options.classes.prev).shift(), 'click', function(listItem) {
+        addEvent(getElementsByClassName(self.displayedCalendarElement, self.options.classes.prev).shift(), 'click', function () {
           showPrevious();
         });
 
         // add event listener to last next month button
-        addEvent(getElementsByClassName(self.displayedCalendarElement, self.options.classes.next).pop(), 'click', function(listItem) {
+        addEvent(getElementsByClassName(self.displayedCalendarElement, self.options.classes.next).pop(), 'click', function () {
           showNext();
         });
 
         // selection behavior on date elements
-        forEach(self.displayedCalendarElement.querySelectorAll('.'+self.options.classes.body + ' li'), function(listItem) {
+        forEach(self.displayedCalendarElement.querySelectorAll('.'+self.options.classes.body + ' li'), function (listItem) {
           _applySelectionBehavior(listItem);
         });
 
@@ -138,7 +148,9 @@
       },
       _selectMonth = function (event) {
 
-        if (!self.enabled) return;
+        if (!self.enabled) {
+          return;
+        }
 
         var dMonth = _getActiveMonth(event.target);
 
@@ -149,14 +161,18 @@
 
         _renderCalendar();
 
-        if (typeof self.options.onSelect != 'undefined') self.options.onSelect(_getSelected());
+        if (typeof self.options.onSelect !== 'undefined') {
+          self.options.onSelect(_getSelected());
+        }
 
       },
       _applySelectionBehavior = function (listItem) {
 
-        addEvent(listItem, ['touchstart', 'mousedown'], function(event) {
+        addEvent(listItem, ['touchstart', 'mousedown'], function () {
 
-          if (self.selecting || !self.enabled) return;
+          if (self.selecting || !self.enabled) {
+            return;
+          }
 
           self.selecting = true;
 
@@ -164,17 +180,21 @@
 
         });
 
-        addEvent(listItem, ['mouseover', 'touchmove'], function(event) {
+        addEvent(listItem, ['mouseover', 'touchmove'], function (event) {
 
-          if (!self.selecting || !self.enabled) return;
+          if (!self.selecting || !self.enabled) {
+            return;
+          }
 
           _updatePreselection(_getActualListItem(listItem, event));
 
         });
 
-        addEvent(listItem, ['mouseup', 'touchend'], function(event) {
+        addEvent(listItem, ['mouseup', 'touchend'], function () {
 
-          if (!self.selecting || !self.enabled) return;
+          if (!self.selecting || !self.enabled) {
+            return;
+          }
 
           self.selecting = false;
 
@@ -193,7 +213,9 @@
       },
       _beginPreselection = function (listItem) {
 
-        if (hasTouch) addEvent(document.getElementsByTagName('body')[0],'touchmove', _preventDefaultBodyMove);
+        if (hasTouch) {
+          addEvent(document.getElementsByTagName('body')[0],'touchmove', _preventDefaultBodyMove);
+        }
 
         self.currentListItem = listItem;
 
@@ -216,7 +238,9 @@
       },
       _updatePreselection = function (listItem) {
 
-        if (self.currentListItem == listItem) return;
+        if (self.currentListItem === listItem) {
+          return;
+        }
 
         self.currentListItem = listItem;
 
@@ -227,7 +251,7 @@
             self.preSelection = { begin: date, end: self.anchorDate };
           }
           else if (date > self.anchorDate) {
-            self.preSelection = { begin: self.anchorDate, end: date }
+            self.preSelection = { begin: self.anchorDate, end: date };
           }
         }
         else {
@@ -239,9 +263,11 @@
         _renderSelection.call(self, self.preSelection, true);
 
       },
-      _completePreselection = function (listItem) {
+      _completePreselection = function () {
 
-        if (hasTouch) document.getElementsByTagName('body')[0].removeEventListener('touchmove', _preventDefaultBodyMove, false);
+        if (hasTouch) {
+          document.getElementsByTagName('body')[0].removeEventListener('touchmove', _preventDefaultBodyMove, false);
+        }
 
         self.currentListItem = false;
 
@@ -251,7 +277,9 @@
 
         self.preSelection = false;
 
-        if (typeof self.options.onSelect != 'undefined') self.options.onSelect(self.options.range ? self.selection : self.selection.begin);
+        if (typeof self.options.onSelect !== 'undefined') {
+          self.options.onSelect(self.options.range ? self.selection : self.selection.begin);
+        }
 
         _clearHoverTimer();
 
@@ -260,38 +288,45 @@
 
         var toggle = false,
           self = this,
-          sameMonth = (_getActiveMonth(listItem).getMonth() == date.getMonth());
+          sameMonth = (_getActiveMonth(listItem).getMonth() === date.getMonth());
 
         switch (getChildIndex(listItem.parentNode))
         {
           case 0:
-            if ((getChildIndex(listItem) == 0) || !sameMonth) toggle = 'prev';
+            if ((getChildIndex(listItem) === 0) || !sameMonth) {
+              toggle = 'prev';
+            }
             break;
           case 4:
-            if (!sameMonth) toggle = 'next';
+            if (!sameMonth) {
+              toggle = 'next';
+            }
             break;
           case 5:
-            if ((getChildIndex(listItem) == 6) || !sameMonth) toggle = 'next';
+            if ((getChildIndex(listItem) === 6) || !sameMonth) {
+              toggle = 'next';
+            }
             break;
-        };
+        }
 
         if (toggle) {
 
-          if (typeof self.hoverTimer == 'undefined') self.hoverTimer = setTimeout(
-            function () {
+          if (typeof self.hoverTimer === 'undefined') {
+            self.hoverTimer = setTimeout(
+              function () {
 
-              if (toggle == 'next') {
-                showNext();
-              }
-              else if (toggle == 'prev') {
-                showPrevious();
-              }
+                if (toggle === 'next') {
+                  showNext();
+                }
+                else if (toggle === 'prev') {
+                  showPrevious();
+                }
 
-              _clearHoverTimer();
+                _clearHoverTimer();
 
-            },
-            self.options.switchMonthOnHoverDelay);
-
+              },
+              self.options.switchMonthOnHoverDelay);
+          }
         }
         else {
 
@@ -302,7 +337,9 @@
       },
       _clearHoverTimer = function () {
 
-        if (self.hoverTimer) clearTimeout(self.hoverTimer);
+        if (self.hoverTimer) {
+          clearTimeout(self.hoverTimer);
+        }
 
         self.hoverTimer = undefined;
 
@@ -340,7 +377,9 @@
       },
       _getDisplayedMonth = function () {
 
-        if (typeof self.displayedMonth == 'undefined') self.displayedMonth = new Date();
+        if (typeof self.displayedMonth === 'undefined') {
+          self.displayedMonth = new Date();
+        }
 
         return self.displayedMonth;
 
@@ -352,13 +391,17 @@
       _getDateFromElement = function (liElement) {
 
         var ulIndex = getChildIndex(liElement.parentNode),
-            incMonth = 0,
-            dateValue = parseInt(liElement.getElementsByTagName('span')[0].innerHTML, 10),
-            displayedMonth = _getActiveMonth(liElement);
+          incMonth = 0,
+          dateValue = parseInt(liElement.getElementsByTagName('span')[0].innerHTML, 10),
+          displayedMonth = _getActiveMonth(liElement);
 
-        if ((ulIndex == 0) && (dateValue > 10)) incMonth = -1;
+        if ((ulIndex === 0) && (dateValue > 10)) {
+          incMonth = -1;
+        }
 
-        if ((ulIndex >= 4) && (dateValue < 12)) incMonth = 1;
+        if ((ulIndex >= 4) && (dateValue < 12)) {
+          incMonth = 1;
+        }
 
         return new Date(displayedMonth.getFullYear(), displayedMonth.getMonth() + incMonth, dateValue);
 
@@ -376,10 +419,14 @@
        */
       _getActualListItem = function (listItem, event) {
 
-        if (typeof event == 'undefined') return listItem;
-        if (typeof event.touches == 'undefined') return listItem;
+        if (typeof event === 'undefined') {
+          return listItem;
+        }
+        if (typeof event.touches === 'undefined') {
+          return listItem;
+        }
 
-        return elementFromDocumentPoint(event.touches[0].pageX, event.touches[0].pageY).parentNode
+        return elementFromDocumentPoint(event.touches[0].pageX, event.touches[0].pageY).parentNode;
 
       },
 
@@ -389,7 +436,9 @@
        */
       _clearSelectionRender = function () {
 
-        if (!self.displayedCalendarElement) return;
+        if (!self.displayedCalendarElement) {
+          return;
+        }
 
         forEach(self.displayedCalendarElement.querySelectorAll('.'+self.options.classes.body + ' .' + self.options.classes.selected), function(listItem) {
 
@@ -400,16 +449,17 @@
       },
       _renderSelection = function (selection, preSelection) {
 
-        var self = self || this;
-
-        if (!self.displayedCalendarElement) return;
-
         var iDate = false,
           i = 0,
           classes,
-          self = self,
-          currentMonth,
-          preSelection = (typeof preSelection == 'undefined') ? false : preSelection;
+          self = self || this,
+          currentMonth;
+
+        if (!self.displayedCalendarElement) {
+          return;
+        }
+
+        preSelection = (typeof preSelection === 'undefined') ? false : preSelection;
 
         forEach(self.displayedCalendarElement.querySelectorAll('.'+self.options.classes.body+' li'), function (listItem) {
 
@@ -419,13 +469,21 @@
 
           iDate = _getDateFromElement(listItem);
 
-          if (_isWithinRange(iDate, selection)) classes.push(preSelection ? self.options.classes.preselected : self.options.classes.selected);
+          if (_isWithinRange(iDate, selection)) {
+            classes.push(preSelection ? self.options.classes.preselected : self.options.classes.selected);
+          }
 
-          if (_isToday(iDate)) classes.push(self.options.classes.today);
+          if (_isToday(iDate)) {
+            classes.push(self.options.classes.today);
+          }
 
-          if (currentMonth != iDate.getMonth()) classes.push(self.options.classes[i++ < 7 ? 'prevMonth' : 'nextMonth']);
+          if (currentMonth !== iDate.getMonth()) {
+            classes.push(self.options.classes[i++ < 7 ? 'prevMonth' : 'nextMonth']);
+          }
 
-          if (self.options.filter) classes = self.options.filter(iDate, classes);
+          if (self.options.filter) {
+            classes = self.options.filter(iDate, classes);
+          }
 
           listItem.className = classes.join(' ');
 
@@ -470,13 +528,13 @@
           render = render.replace('#title', self.options.monthNames[self.options.lang][displayedMonth.getMonth()] + ' ' + displayedMonth.getFullYear());
 
           // render nav icons
-          if (m == displayedMonth.getMonth()) {
+          if (m === displayedMonth.getMonth()) {
             render = render.replace('#navprev', self.options.navDomContent.prev);
           }
           else {
             render = render.replace('#navprev', '');
           }
-          if ((displayedMonth.getMonth()+1)%12 == lastMonth.getMonth()) {
+          if ((displayedMonth.getMonth()+1)%12 === lastMonth.getMonth()) {
             render = render.replace('#navnext', self.options.navDomContent.next);
           }
           else {
@@ -527,13 +585,17 @@
 
             curDate = new Date(displayedMonth.getFullYear(), displayedMonth.getMonth() + varMonth, mSi);
 
-            if (selected && _isWithinRange(curDate, selected)) classes.push(self.options.classes.selected);
+            if (selected && _isWithinRange(curDate, selected)) {
+              classes.push(self.options.classes.selected);
+            }
 
             if (_isToday(curDate)) {
               classes.push(self.options.classes.today);
             }
 
-            if (self.options.filter) self.options.filter(curDate, classes);
+            if (self.options.filter) {
+              self.options.filter(curDate, classes);
+            }
 
             render = render.replace(regexp, classes.length ? ' class="' + classes.join(' ') + '"':'');
 
@@ -551,15 +613,16 @@
       },
       _renderCalendar = function() {
 
-        var displayedMonth = _getDisplayedMonth();
+        var displayedMonth = _getDisplayedMonth(),
+          eltToDisplay = document.createElement('div');
 
         if (self.selecting) {
 
           // ensure selection origin calendar is maintained and hidden if it isn't calendar to be shown. Show it if it is.
 
-          if ((displayedMonth.getMonth() == self.anchorDate.getMonth())
-            && (displayedMonth.getFullYear() == self.anchorDate.getFullYear())
-            && (getElementsByClassName(self.element, self.options.classes.originCalendar).length)) {
+          if ((displayedMonth.getMonth() === self.anchorDate.getMonth()) &&
+            (displayedMonth.getFullYear() === self.anchorDate.getFullYear()) &&
+            (getElementsByClassName(self.element, self.options.classes.originCalendar).length)) {
 
             self.element.removeChild(getElementsByClassName(self.element, self.options.classes.main)[0]);
 
@@ -591,7 +654,6 @@
 
         }
 
-        var eltToDisplay = document.createElement('div');
         eltToDisplay.className = self.options.classes.main;
         eltToDisplay.innerHTML = _generateCalendarHTML(displayedMonth);
 
@@ -633,7 +695,7 @@
 
           calStack.unshift(day.getDate().toString());
 
-        };
+        }
 
         // shove in days of next month
         day = new Date(year, month + 1, 0);
@@ -651,9 +713,11 @@
       },
       _isToday = function (date) {
 
-        if (typeof self.today == 'undefined') self.today = new Date().toDateString();
+        if (typeof self.today === 'undefined') {
+          self.today = new Date().toDateString();
+        }
 
-        return (date.toDateString() == self.today);
+        return (date.toDateString() === self.today);
 
       },
       _isWithinRange = function (date, range) {
@@ -669,9 +733,13 @@
       };
 
 
-    if (!options) options = {};
+    if (!options) {
+      options = {};
+    }
 
-    if (!isElement(element)) return;
+    if (!isElement(element)) {
+      return;
+    }
 
     extend(self, {
       options: extend({
@@ -701,7 +769,7 @@
           prevMonth: 'calendar-prev-month',
           nextMonth: 'calendar-next-month',
           disabled: 'calendar-disabled',
-          originCalendar: 'calendar-origin',
+          originCalendar: 'calendar-origin'
         }, options.classes ? options.classes : {}),
         navDomContent: { prev: '<', next: '>' },
         monthNames: extend({
@@ -724,12 +792,12 @@
           da: ['Søn', 'Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør'],
           tr: ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt']
         }, options.weekDays),
-        switchMonthOnHoverDelay: 800,
+        switchMonthOnHoverDelay: 800
       }, options),
       displayedCalendarElement: false,
       preSelection: false,
       selecting: false,
-      element: element,
+      element: element
     });
 
 
@@ -742,7 +810,7 @@
     /*
       These are what you will see when accessing calendar object
      */
-    
+
     return {
       show: show,
       hide: hide,
@@ -753,7 +821,7 @@
       options: options,
       getSelected: _getSelected,
       setSelected: setSelected
-    }
+    };
 
   },
 
@@ -785,7 +853,9 @@
         addEvent(element, 'click', _focus);
         addEvent(elementSecond, 'click', _focus);
         addEvent(document.getElementsByTagName('body')[0], 'click', function () {
-          if (!inFocus) _blur();
+          if (!inFocus) {
+            _blur();
+          }
           inFocus = false;
         });
       }
@@ -794,12 +864,14 @@
       var offsetPos;
 
       inFocus = true;
-      if (!calCanvas) _createCalendar();
+      if (!calCanvas) {
+        _createCalendar();
+      }
 
       offsetPos = offset(element);
-      offsetPos.left += 'px'; 
+      offsetPos.left += 'px';
       offsetPos.top += element.offsetHeight;
-      offsetPos.top += 'px'; 
+      offsetPos.top += 'px';
 
       extend(calCanvas.style, offsetPos);
 
@@ -839,15 +911,17 @@
     }
     function _onSelect (newSelection) {
 
-      if (calendar.options.inline) return;
+      if (calendar.options.inline) {
+        return;
+      }
 
       if (elementSecond && calendar.options.range) {
         element.value = _dateToString(newSelection.begin);
         elementSecond.value = newSelection.end ? _dateToString(newSelection.end) : '' ;
       }
       else {
-        element.value = _dateToString(newSelection.begin||newSelection) + 
-          (newSelection.end && newSelection.begin != newSelection.end ? options.separator + _dateToString(newSelection.end) : '');
+        element.value = _dateToString(newSelection.begin||newSelection) +
+          (newSelection.end && newSelection.begin !== newSelection.end ? options.separator + _dateToString(newSelection.end) : '');
       }
 
       fireEvent(element, 'change');
@@ -872,18 +946,22 @@
 
 
     if (!element) {
-      throw "Calendar needs a base element to attach to";
+      throw 'Calendar needs a base element to attach to';
     }
 
     // Grab the elements
     element = (typeof element === 'string') ? document.querySelector(element) : element;
-    elementSecond = (typeof elementSecond === 'string') ? document.querySelector(elementSecond) : elementSecond;  
+    elementSecond = (typeof elementSecond === 'string') ? document.querySelector(elementSecond) : elementSecond;
 
     _init();
     calendar = _createCalendar();
 
-    if (!options.open && !options.inline) _blur();
-    else if (options.inline) calCanvas.style.display = 'inline-block';
+    if (!options.open && !options.inline) {
+      _blur();
+    }
+    else if (options.inline) {
+      calCanvas.style.display = 'inline-block';
+    }
 
     return calendar;
 
@@ -891,26 +969,34 @@
   /*
     Helper Functions
   */
-  extend = function (){
-    for(var i=1; i<arguments.length; i++)
-        for(var key in arguments[i])
-            if(arguments[i].hasOwnProperty(key))
-                arguments[0][key] = arguments[i][key];
+  extend = function () {
+    for (var key, i = 1; i < arguments.length; i++) {
+      for (key in arguments[i]) {
+        if (arguments[i].hasOwnProperty(key)) {
+          arguments[0][key] = arguments[i][key];
+        }
+      }
+    }
     return arguments[0];
   },
   getElementsByClassName = function (node, classname) {
-    var a = [];
-    var re = new RegExp('(^| )'+classname+'( |$)');
-    var els = node.getElementsByTagName("*");
-    for (var i=0, j=els.length; i<j; i++) {
-      if(re.test(els[i].className))a.push(els[i]);
+    var a = [],
+      re = new RegExp('(^| )'+classname+'( |$)'),
+      els = node.getElementsByTagName('*'),
+      i,
+      j;
+
+    for (i=0, j = els.length; i<j; i++) {
+      if (re.test(els[i].className)) {
+        a.push(els[i]);
+      }
     }
     return a;
   },
   isElement = function(o){
     return (
-      typeof HTMLElement === "object" ? o instanceof HTMLElement : //DOM2
-      o && typeof o === "object" && o.nodeType === 1 && typeof o.nodeName==="string"
+      typeof HTMLElement === 'object' ? o instanceof HTMLElement : //DOM2
+      o && typeof o === 'object' && o.nodeType === 1 && typeof o.nodeName === 'string'
     );
   },
   forEach = function (array, action) {
@@ -919,29 +1005,37 @@
     }
   },
   addEvent = function (elem, types, eventHandle) {
-    if (elem == null || elem == undefined) return;
-    if (typeof types == 'string') types = [types];
+    if (elem === null || elem === undefined) {
+      return;
+    }
+    if (typeof types === 'string') {
+      types = [types];
+    }
     forEach(types, function(type) {
       if ( elem.addEventListener ) {
-        elem.addEventListener( type, eventHandle, false);
+        elem.addEventListener(type, eventHandle, false);
       }
-      else if ( elem.attachEvent ) {
-          elem.attachEvent( "on" + type, eventHandle );
+      else if (elem.attachEvent) {
+          elem.attachEvent('on' + type, eventHandle);
       }
       else {
-          elem["on"+type]=eventHandle;
+          elem['on' + type] = eventHandle;
       }
     });
   },
   fireEvent = function (elem, types) {
-    if (elem == null || elem == undefined) return;
-    if (typeof types == 'string') types = [types];
+    if (elem === null || elem === undefined) {
+      return;
+    }
+    if (typeof types === 'string') {
+      types = [types];
+    }
     forEach(types, function(type){
-      if ("fireEvent" in elem) {
+      if ('fireEvent' in elem) {
         elem.fireEvent(type);
       }
       else {
-        var evt = document.createEvent("HTMLEvents");
+        var evt = document.createEvent('HTMLEvents');
         evt.initEvent(type, false, true);
         elem.dispatchEvent(evt);
       }
@@ -949,9 +1043,13 @@
   },
   makeUnselectable = function (node) {
     /* IE < 11 */
-    if (window && window.navigator && !window.navigator.userAgent.match(/msie/i)) return;
+    if (window && window.navigator && !window.navigator.userAgent.match(/msie/i)) {
+      return;
+    }
 
-    if (node.nodeType == 1) node.setAttribute("unselectable", "on");
+    if (node.nodeType === 1) {
+      node.setAttribute('unselectable', 'on');
+    }
 
     var child = node.firstChild;
     while (child) {
@@ -963,7 +1061,9 @@
     var parent = elemroot.parentNode || elemroot,
         re = new RegExp('(^| )'+match+'( |$)');
     while (parent !== elemroot) {
-      if (re.test(parent.className)) return parent;
+      if (re.test(parent.className)) {
+        return parent;
+      }
       elemroot = parent;
       parent = elemroot.parentNode || elemroot;
     }
@@ -973,8 +1073,9 @@
 
     elem = elem.previousSibling;
 
-    while (elem && elem.nodeType != 1)
+    while (elem && elem.nodeType !== 1) {
       elem = elem.previousSibling;
+    }
 
     return elem;
 
@@ -983,7 +1084,9 @@
 
     var i = 0;
 
-    while( (child = previousObject(child)) != null ) i++;
+    while ((child = previousObject(child)) !== null) {
+      i++;
+    }
 
     return i;
 
@@ -998,32 +1101,38 @@
       clientLeft,
       scrollTop,
       scrollLeft;
-    
-    box.style.paddingLeft = box.style.width = "1px";
+
+    box.style.paddingLeft = box.style.width = '1px';
     body.appendChild(box);
-    isBoxModel = box.offsetWidth == 2;
+    isBoxModel = box.offsetWidth === 2;
     body.removeChild(box);
     box = element.getBoundingClientRect();
-  
+
     clientTop  = docElem.clientTop  || body.clientTop  || 0,
     clientLeft = docElem.clientLeft || body.clientLeft || 0,
     scrollTop  = win.pageYOffset || isBoxModel && docElem.scrollTop  || body.scrollTop,
     scrollLeft = win.pageXOffset || isBoxModel && docElem.scrollLeft || body.scrollLeft;
-    
+
     return {
       top : box.top  + scrollTop  - clientTop,
       left: box.left + scrollLeft - clientLeft
     };
   },
-  hasClass = function(element, cls) { return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1; },
-  addClass = function(element, className) { if (!hasClass(element, className)) element.className = element.className + ' ' + className; },
+  hasClass = function (element, cls) {
+    return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
+  },
+  addClass = function (element, className) {
+    if (!hasClass(element, className)) {
+      element.className = element.className + ' ' + className;
+    }
+  },
   removeClass = function(element, cls) { if (hasClass(element, cls)) { var regex = new RegExp(cls, 'g'); element.className = element.className.replace(regex,''); } },
   elementFromPointIsUsingViewPortCoordinates = function() {
     if (window.pageYOffset > 0) {     // page scrolled down
-      return (window.document.elementFromPoint(0, window.pageYOffset + window.innerHeight -1) == null);
+      return (window.document.elementFromPoint(0, window.pageYOffset + window.innerHeight -1) === null);
     }
     else if (window.pageXOffset > 0) {   // page scrolled to the right
-      return (window.document.elementFromPoint(window.pageXOffset + window.innerWidth -1, 0) == null);
+      return (window.document.elementFromPoint(window.pageXOffset + window.innerWidth -1, 0) === null);
     }
     return false; // no scrolling, don't care
   },
