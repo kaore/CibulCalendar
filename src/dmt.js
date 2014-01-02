@@ -8,6 +8,7 @@
   'use strict';
 
   var hasTouch = 'ontouchstart' in window && !(/hp-tablet/gi).test(navigator.appVersion),
+    isWeird = !!(window && window.navigator && window.navigator.userAgent.match(/msie/i)),
 
   CibulCalendar = function (element, options) {
 
@@ -1043,7 +1044,7 @@
   },
   makeUnselectable = function (node) {
     /* IE < 11 */
-    if (window && window.navigator && !window.navigator.userAgent.match(/msie/i)) {
+    if (isWeird) {
       return;
     }
 
