@@ -760,109 +760,124 @@
   /*
     Wrapper function to help setup and behavior of calendar element
    */
-  var setupCalendar = function (elementId, options) {
+  var setupCalendar = function () {
 
     // on field select, need to create element
     // on click elsewhere need to hide it
 
-    var element = (typeof elementId === 'string') ? document.querySelector(elementId) : elementId,
+    var args = Array.prototype.slice.call(arguments, 0),
+      element = args.shift(),
+      options = args.pop(),
+      elementSecond = args.shift(),
       calCanvas,
       calendar,
-      inFocus = false,
-      _init = function () {
-        options = extend({
-          onSelect: _onSelect,
-          separator: ' - ',
-          canvasClass: 'calendar-canvas',
-          offset: { top: 5, left: 0 }
-        }, options ? options : {});
+      inFocus = false;
 
-        if (!options.inline) {
-          addEvent(element, 'click', _focus);
-          addEvent(document.getElementsByTagName('body')[0], 'click', function () {
-            if (!inFocus) _blur();
-            inFocus = false;
-          });
-        }
-      },
-      _focus = function () {
-        var offsetPos;
+    function _init () {
+      options = extend({
+        onSelect: _onSelect,
+        separator: ' - ',
+        canvasClass: 'calendar-canvas',
+        offset: { top: 5, left: 0 }
+      }, options ? options : {});
 
-        inFocus = true;
-        if (!calCanvas) _createCalendar();
+      if (!options.inline) {
+        addEvent(element, 'click', _focus);
+        addEvent(elementSecond, 'click', _focus);
+        addEvent(document.getElementsByTagName('body')[0], 'click', function () {
+          if (!inFocus) _blur();
+          inFocus = false;
+        });
+      }
+    }
+    function _focus () {
+      var offsetPos;
 
-        offsetPos = offset(element);
-        offsetPos.left += 'px'; 
-        offsetPos.top += element.offsetHeight;
-        offsetPos.top += 'px'; 
+      inFocus = true;
+      if (!calCanvas) _createCalendar();
 
-        extend(calCanvas.style, offsetPos);
+      offsetPos = offset(element);
+      offsetPos.left += 'px'; 
+      offsetPos.top += element.offsetHeight;
+      offsetPos.top += 'px'; 
 
-        calCanvas.style.display = 'block';
+      extend(calCanvas.style, offsetPos);
 
-        element.blur();
-      },
-      _blur = function () {
-        if (calCanvas) {
-          calCanvas.style.display = 'none';
-        }
-      },
-      _createCalendar = function () {
+      calCanvas.style.display = 'block';
 
-        if (options.inline) {
-          calCanvas = element;
-          calCanvas.className += ' ' + options.canvasClass;
-        }
+      element.blur();
+    }
+    function _blur () {
+      if (calCanvas) {
+        calCanvas.style.display = 'none';
+      }
+    }
+    function _createCalendar () {
 
-        else {
-          calCanvas = document.createElement('div');
-          calCanvas.className = options.canvasClass;
+      if (options.inline) {
+        calCanvas = element;
+        calCanvas.className += ' ' + options.canvasClass;
+      }
 
-          if (!element.parentNode.style.position) {
-            element.parentNode.style.position = 'relative';
-          }
+      else {
+        calCanvas = document.createElement('div');
+        calCanvas.className = options.canvasClass;
 
-          calCanvas.style.position = 'absolute';
-
-          addEvent(calCanvas, 'click', _focus);
-
-          document.body.appendChild(calCanvas);
+        if (!element.parentNode.style.position) {
+          element.parentNode.style.position = 'relative';
         }
 
-        return new CibulCalendar(calCanvas, options);
+        calCanvas.style.position = 'absolute';
 
-      },
-      _onSelect = function (newSelection) {
+        addEvent(calCanvas, 'click', _focus);
 
-        if (calendar.options.inline) return;
+        document.body.appendChild(calCanvas);
+      }
 
+      return new CibulCalendar(calCanvas, options);
+
+    }
+    function _onSelect (newSelection) {
+
+      if (calendar.options.inline) return;
+
+      if (elementSecond && calendar.options.range) {
+        element.value = _dateToString(newSelection.begin);
+        elementSecond.value = newSelection.end ? _dateToString(newSelection.end) : '' ;
+      }
+      else {
         element.value = _dateToString(newSelection.begin||newSelection) + 
-            (newSelection.end && newSelection.begin != newSelection.end ? options.separator + _dateToString(newSelection.end) : '');
+          (newSelection.end && newSelection.begin != newSelection.end ? options.separator + _dateToString(newSelection.end) : '');
+      }
 
-        fireEvent(element, 'change');
+      fireEvent(element, 'change');
 
-        if (calendar.options.range && !calendar.getSelected().end) {
-          return;
-        }
-        else {
-          setTimeout(_blur,200);
-        }
-      },
-      _dateToString = function (date) {
+      if (calendar.options.range && !calendar.getSelected().end) {
+        return;
+      }
+      else {
+        setTimeout(_blur,200);
+      }
+    }
+    function _dateToString (date) {
 
-        return _fZ(date.getMonth()+1) + '/' + _fZ(date.getDate()) + '/' + date.getFullYear();
+      return _fZ(date.getMonth()+1) + '/' + _fZ(date.getDate()) + '/' + date.getFullYear();
 
-      },
-      _fZ = function (n) {
+    }
+    function _fZ (n) {
 
-        return (n > 9 ? '' : '0') + n;
+      return (n > 9 ? '' : '0') + n;
 
-      };
+    }
 
 
     if (!element) {
       throw "Calendar needs a base element to attach to";
     }
+
+    // Grab the elements
+    element = (typeof element === 'string') ? document.querySelector(element) : element;
+    elementSecond = (typeof elementSecond === 'string') ? document.querySelector(elementSecond) : elementSecond;  
 
     _init();
     calendar = _createCalendar();

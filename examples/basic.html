@@ -12,12 +12,12 @@
     </style>
     <script type="text/javascript">
       function onload() {
-        window.cal = new CibulCalendar('.calendar', {
+        window.cal = new CibulCalendar('#begindate', '#enddate', {
           range: true,
-          monthSpan: 3,
+          monthSpan: 2,
           switchMonthOnHoverDelay: 400,
           open: false,
-          inline: true
+          inline: false
         });
 
       }
@@ -26,7 +26,8 @@
   </head>
   <body onload="onload()">
     <div class="content">
-      <input type="text" id="datespan"/>
+      <input type="text" id="begindate"/>
+      <input type="text" id="enddate"/>
     </div>
     <div class="calendar">
     </div>
