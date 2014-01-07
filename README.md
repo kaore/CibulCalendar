@@ -38,7 +38,7 @@ DMT('#myDateInput');
 
 For range selections with this mode, you can pass down two elements to print begin and end dates seperately
 ```JavaScript
-DMT('#myForm .calendarContainer', #myForm .begin', '#myForm .end', options);
+DMT('#myForm .calendarContainer', '#myForm .begin', '#myForm .end', options);
 ```
 
 
