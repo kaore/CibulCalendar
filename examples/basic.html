@@ -12,12 +12,12 @@
     </style>
     <script type="text/javascript">
       function onload() {
-        window.cal = new DMT('#begindate', '#enddate', {
+        window.cal = new DMT('.calendar', '#begindate', '#enddate', {
           range: true,
           monthSpan: 2,
           switchMonthOnHoverDelay: 400,
           open: false,
-          inline: false,
+          inline: true,
           filter: function(date, classes) {
 
             // highlight saturdays and sundays

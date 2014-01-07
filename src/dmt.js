@@ -838,9 +838,13 @@
       element = args.shift(),
       options = args.pop(),
       elementSecond = args.shift(),
+      elementThird = args.shift(),
       calCanvas,
       calendar,
-      inFocus = false;
+      inFocus = false,
+      container = undefined,
+      dateBegin = undefined,
+      dateEnd = undefined;
 
     function _init () {
       options = extend({
@@ -851,8 +855,8 @@
       }, options ? options : {});
 
       if (!options.inline) {
-        addEvent(element, 'click', _focus);
-        addEvent(elementSecond, 'click', _focus);
+        addEvent(dateBegin, 'click', _focus);
+        addEvent(dateEnd, 'click', _focus);
         addEvent(document.getElementsByTagName('body')[0], 'click', function () {
           if (!inFocus) {
             _blur();
@@ -912,22 +916,22 @@
     }
     function _onSelect (newSelection) {
 
-      if (calendar.options.inline) {
-        return;
-      }
 
-      if (elementSecond && calendar.options.range) {
-        element.value = _dateToString(newSelection.begin);
-        elementSecond.value = newSelection.end ? _dateToString(newSelection.end) : '' ;
+      if (dateEnd) {
+        dateBegin.value = _dateToString(newSelection.begin);
+        dateEnd.value = newSelection.end ? _dateToString(newSelection.end) : '' ;
       }
       else {
-        element.value = _dateToString(newSelection.begin||newSelection) +
+        dateBegin.value = _dateToString(newSelection.begin||newSelection) +
           (newSelection.end && newSelection.begin !== newSelection.end ? options.separator + _dateToString(newSelection.end) : '');
       }
 
       fireEvent(element, 'change');
 
-      if (calendar.options.range && !calendar.getSelected().end) {
+      if (calendar.options.inline) {
+        return;
+      }
+      else if (calendar.options.range && !calendar.getSelected().end) {
         return;
       }
       else {
@@ -946,13 +950,29 @@
     }
 
 
+    // Grab the elements
+    element = (typeof element === 'string') ? document.querySelector(element) : element;
+    elementSecond = (typeof elementSecond === 'string') ? document.querySelector(elementSecond) : elementSecond;
+    elementThird = (typeof elementThird === 'string') ? document.querySelector(elementThird) : elementThird;
+
     if (!element) {
       throw 'Calendar needs a base element to attach to';
     }
 
-    // Grab the elements
-    element = (typeof element === 'string') ? document.querySelector(element) : element;
-    elementSecond = (typeof elementSecond === 'string') ? document.querySelector(elementSecond) : elementSecond;
+    if (options.inline && elementThird) {
+      dateBegin = elementSecond;
+      dateEnd = elementThird;
+    }
+    else if (options.inline && elementSecond) {
+      dateBegin = elementSecond;
+    }
+    else if (elementSecond) {
+      dateEnd = elementSecond;
+      dateBegin = element;
+    }
+    else {
+      dateBegin = element;
+    }
 
     _init();
     calendar = _createCalendar();

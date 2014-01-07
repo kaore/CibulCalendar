@@ -1,6 +1,6 @@
-# Overview
+# DMT
 
-DMT (Date Management Tool) is a hallucinogenic date picker that enables users to easily pick dates or date ranges.
+Date Management Tool is a hallucinogenic date picker that enables users to easily pick dates or date ranges.
 
 Here is the simplest way to get it running:
 
@@ -38,7 +38,7 @@ DMT('#myDateInput');
 
 For range selections with this mode, you can pass down two elements to print begin and end dates seperately
 ```JavaScript
-DMT('#myForm .begin', '#myForm .end', options);
+DMT('#myForm .calendarContainer', #myForm .begin', '#myForm .end', options);
 ```
 
 
