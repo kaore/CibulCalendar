@@ -841,7 +841,6 @@
       elementThird = args.shift(),
       calCanvas,
       calendar,
-      inFocus = false,
       container = undefined,
       dateBegin = undefined,
       dateEnd = undefined;
@@ -857,18 +856,16 @@
       if (!options.inline) {
         addEvent(dateBegin, 'click', _focus);
         addEvent(dateEnd, 'click', _focus);
-        addEvent(document.getElementsByTagName('body')[0], 'click', function () {
-          if (!inFocus) {
+        addEvent(document.getElementsByTagName('body')[0], 'click', function (e) {
+          if (calCanvas.contains(e.target)) {
             _blur();
           }
-          inFocus = false;
         });
       }
     }
     function _focus () {
       var offsetPos;
 
-      inFocus = true;
       if (!calCanvas) {
         _createCalendar();
       }
