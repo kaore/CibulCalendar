@@ -857,7 +857,7 @@
         addEvent(dateBegin, 'click', _focus);
         addEvent(dateEnd, 'click', _focus);
         addEvent(document.getElementsByTagName('body')[0], 'click', function (e) {
-          if (calCanvas.contains(e.target)) {
+          if (!calCanvas.contains(e.target)) {
             _blur();
           }
         });
