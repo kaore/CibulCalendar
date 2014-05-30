@@ -1,0 +1,74 @@
+.calendar-canvas {
+  text-align: center;
+  background: white;
+  box-shadow: 0 1px 2px #999999;
+  z-index: 9001;
+}
+
+
+.calendar-main {
+  font-size: 0.8em;
+}
+
+.calendar-main:before,
+.calendar-main:after {
+  content: " ";
+  display: table;
+}
+.calendar-main:after {
+  clear: both;
+}
+.calendar-month {
+  display: inline;
+  height: auto;
+  float: left;
+}
+
+.calendar-main .calendar-month {
+  width: 18em;
+}
+.calendar-main ul {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+.calendar-main li {
+  list-style-type: none;
+  display: inline-block;
+  width: 13.2% ;
+  cursor: pointer;
+  text-align: center;
+  margin: 0;
+}
+.calendar-main li span {
+  display: inline-block;
+  line-height: 1.8em;
+}
+.calendar-main li.calendar-title {
+  width: 66%;
+}
+.calendar-main li span {
+  padding: 0.1em 0.05em;
+  display: block;
+}
+.calendar-main li.calendar-prev-month span,
+.calendar-main li.calendar-next-month span {
+  color: #aaa;
+}
+.calendar-main .calendar-body li.calendar-selected span {
+  background: #666;
+  color: white;
+}
+.calendar-main .calendar-body li.calendar-preselected span {
+  background: #f0f0f0;
+}
+.calendar-main * {
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.calendar-main .calendar-today {
+  font-weight: bold;
+}
