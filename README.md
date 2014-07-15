@@ -32,6 +32,7 @@ But you might want to handle the Calendar in a script rather than applying it di
 
 # Options
 
+* **init** (default: today): date defining initially displayed month
 * **range** (default: true): if false, range date picking is disabled. Here is an example.
 * **enabled** (default: true): state of the calendar at init
 * **lang** (default: ‘en’): Language of the calendar. can be english (en), french (fr), italian (it) or spanish (es). You can extend this with any other language (see below).
