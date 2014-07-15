@@ -171,7 +171,7 @@
     },
     _selectMonth: function(){
 
-      if (!this.enabled) return;
+      if (!this.enabled || !this.options.range) return;
 
       var dMonth = this._getDisplayedMonth();
 
