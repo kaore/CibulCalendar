@@ -47,8 +47,8 @@
             sv: ['Januari', 'Februari', 'Mars', 'April', 'Maj', 'Juni', 'Juli', 'Augusti', 'September', 'Oktober', 'November', 'December'],
             no: ['Januar', 'Februar', 'Mars', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Desember'],
             da: ['Januar', 'Februar', 'Marts', 'April', 'Maj', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'December'],
-            ar: ['دجمبر','نونبر','أكتوبر','شتمبر','غشت','يوليو','يونيو','ماي','أبريل','مارس','فبراير','يناير']
-            de: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
+            ar: ['دجمبر','نونبر','أكتوبر','شتمبر','غشت','يوليو','يونيو','ماي','أبريل','مارس','فبراير','يناير'],
+            de: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
           }, options.monthNames?options.monthNames:{}),
           weekDays: extend({
             en: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
