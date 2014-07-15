@@ -15,6 +15,7 @@
 
       function onload() {
         var cal = new CibulCalendar(document.getElementById('cal'), {
+          init: new Date('1990-01-12'),
           firstDayOfWeek: 0,
           range: false,
           onSelect: function(selected) {
