@@ -4,7 +4,7 @@
  */
 
 (function(){
-
+  'use strict';
   var hasTouch = 'ontouchstart' in window && !(/hp-tablet/gi).test(navigator.appVersion),
 
     CibulCalendar = function(element, options) {
@@ -553,7 +553,7 @@
 
       day = new Date(year, month, 1);
 
-      offsetDays = (day.getDay()-this.options.firstDayOfWeek)%7;
+      var offsetDays = (day.getDay()-this.options.firstDayOfWeek)%7;
       offsetDays = offsetDays<0?offsetDays+7:offsetDays;
 
       while(offsetDays--) {
