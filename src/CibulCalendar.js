@@ -1,125 +1,156 @@
 /*!
- * CibulCalendar v0.2.6 ~ Copyright (c) 2013 Kari Olafsson, http://tech.cibul.net
+ * CibulCalendar v0.2.7 ~ Copyright (c) 2013 Kari Olafsson, http://tech.cibul.net
  * Released under MIT license, http://opensource.org/licenses/mit-license.php
  */
 
-(function(){
+(function( root, factory ) {
+
+  if ( typeof exports == 'object' ) { // CommonJS
+
+    module.exports = factory();
+
+  } else if ( typeof define == 'function' && define.amd ) { // AMD module
+
+    define(factory);
+
+  } else { // Browser global
+
+    var objs = factory()
+
+    root.CibulCalendar = objs.CibulCalendar;
+
+    root.setCibulCalendar = objs.setCibulCalendar;
+
+  }
+
+}( this, function() {
+
   'use strict';
-  var hasTouch = 'ontouchstart' in window && !(/hp-tablet/gi).test(navigator.appVersion),
 
-    CibulCalendar = function(element, options) {
+  var hasTouch = 'ontouchstart' in window && !( /hp-tablet/gi ).test( navigator.appVersion ),
 
-      if (!options) options = {};
+  CibulCalendar = function( element, options ) {
 
-      if (!isElement(element)) return;
+    if ( !options ) options = {};
 
-      extend(this, {
-        options: extend({
-          init: new Date(),   // month to be displayed at init (defaults at current)
-          range: true,        // date selection mode
-          lang: 'en',
-          enabled: true,
-          firstDayOfWeek: 1,
-          selected: false,
-          filter: false,
-          template: '<div class="calhead"><ul class="calmonthnav"><li class="calprevmonth"><span>#navprev</span></li><li class="calmonth"><span class="month">#title</span></li><li class="calnextmonth"><span>#navnext</span></li></ul><ul class="calweekdays"><li><span>#wd0</span></li><li><span>#wd1</span></li><li><span>#wd2</span></li><li><span>#wd3</span></li><li><span>#wd4</span></li><li><span>#wd5</span></li><li><span>#wd6</span></li></ul></div><div class="calbody"><ul><li#cls00><span>#d00</span></li><li#cls01><span>#d01</span></li><li#cls02><span>#d02</span></li><li#cls03><span>#d03</span></li><li#cls04><span>#d04</span></li><li#cls05><span>#d05</span></li><li#cls06><span>#d06</span></li></ul><ul><li#cls07><span>#d07</span></li><li#cls08><span>#d08</span></li><li#cls09><span>#d09</span></li><li#cls10><span>#d10</span></li><li#cls11><span>#d11</span></li><li#cls12><span>#d12</span></li><li#cls13><span>#d13</span></li></ul><ul><li#cls14><span>#d14</span></li><li#cls15><span>#d15</span></li><li#cls16><span>#d16</span></li><li#cls17><span>#d17</span></li><li#cls18><span>#d18</span></li><li#cls19><span>#d19</span></li><li#cls20><span>#d20</span></li></ul><ul><li#cls21><span>#d21</span></li><li#cls22><span>#d22</span></li><li#cls23><span>#d23</span></li><li#cls24><span>#d24</span></li><li#cls25><span>#d25</span></li><li#cls26><span>#d26</span></li><li#cls27><span>#d27</span></li></ul><ul><li#cls28><span>#d28</span></li><li#cls29><span>#d29</span></li><li#cls30><span>#d30</span></li><li#cls31><span>#d31</span></li><li#cls32><span>#d32</span></li><li#cls33><span>#d33</span></li><li#cls34><span>#d34</span></li></ul><ul><li#cls35><span>#d35</span></li><li#cls36><span>#d36</span></li><li#cls37><span>#d37</span></li><li#cls38><span>#d38</span></li><li#cls39><span>#d39</span></li><li#cls40><span>#d40</span></li><li#cls41><span>#d41</span></li></ul></div>',
-          classes: extend({
-            calendar: 'ccal',
-            locale: extend({en:'en', fr:'fr', it:'it', es:'es', sv:'sv', no:'no', da:'da', ar:'ar', de: 'de'}),
-            navDomPrev: 'calprevmonth',
-            navDomNext: 'calnextmonth',
-            calendarBody: 'calbody',
-            selected: 'selected',
-            preSelected: 'preselected',
-            today: 'today',
-            month: 'month',
-            prevMonthDate: 'calprev',
-            nextMonthDate: 'calnext',
-            disabled: 'disabled',
-            originCalendar: 'origincal',
-          }, options.classes?options.classes:{}),
-          navDomContent: { prev: '<', next: '>'},
-          monthNames: extend({
-            en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-            fr: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
-            it: ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'],
-            es: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Augosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-            sv: ['Januari', 'Februari', 'Mars', 'April', 'Maj', 'Juni', 'Juli', 'Augusti', 'September', 'Oktober', 'November', 'December'],
-            no: ['Januar', 'Februar', 'Mars', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Desember'],
-            da: ['Januar', 'Februar', 'Marts', 'April', 'Maj', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'December'],
-            ar: ['دجمبر','نونبر','أكتوبر','شتمبر','غشت','يوليو','يونيو','ماي','أبريل','مارس','فبراير','يناير'],
-            de: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
-          }, options.monthNames?options.monthNames:{}),
-          weekDays: extend({
-            en: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-            fr: ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'],
-            it: ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'],
-            es: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
-            sv: ['Sön', 'Mån', 'Tid', 'Ons', 'Tor', 'Fre', 'Lör'],
-            no: ['Søn', 'Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør'],
-            da: ['Søn', 'Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør'],
-            ar: ['اﻷحد','السبت','الجمعة','الخميس','اﻷربعاء','الثلاتاء','اﻷتنين'],
-            de: ['Son', 'Mon', 'Die', 'Mit', 'Don', 'Fre', 'Sam']
-          }, options.weekDays),
-          switchMonthOnHoverDelay: 800,
-        }, options),
-        displayedCalendarElement: false,
-        preSelection: false,
-        selecting: false,
-        element: element,
-      });
+    if ( !isElement( element ) ) return;
 
-      this.enabled = this.options.enabled;
+    extend( this, {
+      options: extend({
+        init: new Date(),   // month to be displayed at init (defaults at current)
+        range: true,        // date selection mode
+        lang: 'en',
+        enabled: true,
+        firstDayOfWeek: 1,
+        selected: false,
+        filter: false,
+        template: '<div class="calhead"><ul class="calmonthnav"><li class="calprevmonth"><span>#navprev</span></li><li class="calmonth"><span class="month">#title</span></li><li class="calnextmonth"><span>#navnext</span></li></ul><ul class="calweekdays"><li><span>#wd0</span></li><li><span>#wd1</span></li><li><span>#wd2</span></li><li><span>#wd3</span></li><li><span>#wd4</span></li><li><span>#wd5</span></li><li><span>#wd6</span></li></ul></div><div class="calbody"><ul><li#cls00><span>#d00</span></li><li#cls01><span>#d01</span></li><li#cls02><span>#d02</span></li><li#cls03><span>#d03</span></li><li#cls04><span>#d04</span></li><li#cls05><span>#d05</span></li><li#cls06><span>#d06</span></li></ul><ul><li#cls07><span>#d07</span></li><li#cls08><span>#d08</span></li><li#cls09><span>#d09</span></li><li#cls10><span>#d10</span></li><li#cls11><span>#d11</span></li><li#cls12><span>#d12</span></li><li#cls13><span>#d13</span></li></ul><ul><li#cls14><span>#d14</span></li><li#cls15><span>#d15</span></li><li#cls16><span>#d16</span></li><li#cls17><span>#d17</span></li><li#cls18><span>#d18</span></li><li#cls19><span>#d19</span></li><li#cls20><span>#d20</span></li></ul><ul><li#cls21><span>#d21</span></li><li#cls22><span>#d22</span></li><li#cls23><span>#d23</span></li><li#cls24><span>#d24</span></li><li#cls25><span>#d25</span></li><li#cls26><span>#d26</span></li><li#cls27><span>#d27</span></li></ul><ul><li#cls28><span>#d28</span></li><li#cls29><span>#d29</span></li><li#cls30><span>#d30</span></li><li#cls31><span>#d31</span></li><li#cls32><span>#d32</span></li><li#cls33><span>#d33</span></li><li#cls34><span>#d34</span></li></ul><ul><li#cls35><span>#d35</span></li><li#cls36><span>#d36</span></li><li#cls37><span>#d37</span></li><li#cls38><span>#d38</span></li><li#cls39><span>#d39</span></li><li#cls40><span>#d40</span></li><li#cls41><span>#d41</span></li></ul></div>',
+        classes: extend({
+          calendar: 'ccal',
+          locale: extend({en:'en', fr:'fr', it:'it', es:'es', sv:'sv', no:'no', da:'da', ar:'ar', de: 'de'}),
+          navDomPrev: 'calprevmonth',
+          navDomNext: 'calnextmonth',
+          calendarBody: 'calbody',
+          selected: 'selected',
+          preSelected: 'preselected',
+          today: 'today',
+          month: 'month',
+          prevMonthDate: 'calprev',
+          nextMonthDate: 'calnext',
+          disabled: 'disabled',
+          originCalendar: 'origincal',
+        }, options.classes?options.classes:{}),
+        navDomContent: { prev: '<', next: '>'},
+        monthNames: extend({
+          en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+          fr: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+          it: ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'],
+          es: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Augosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+          sv: ['Januari', 'Februari', 'Mars', 'April', 'Maj', 'Juni', 'Juli', 'Augusti', 'September', 'Oktober', 'November', 'December'],
+          no: ['Januar', 'Februar', 'Mars', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Desember'],
+          da: ['Januar', 'Februar', 'Marts', 'April', 'Maj', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'December'],
+          ar: ['دجمبر','نونبر','أكتوبر','شتمبر','غشت','يوليو','يونيو','ماي','أبريل','مارس','فبراير','يناير'],
+          de: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
+        }, options.monthNames?options.monthNames:{}),
+        weekDays: extend({
+          en: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+          fr: ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'],
+          it: ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'],
+          es: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+          sv: ['Sön', 'Mån', 'Tid', 'Ons', 'Tor', 'Fre', 'Lör'],
+          no: ['Søn', 'Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør'],
+          da: ['Søn', 'Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør'],
+          ar: ['اﻷحد','السبت','الجمعة','الخميس','اﻷربعاء','الثلاتاء','اﻷتنين'],
+          de: ['Son', 'Mon', 'Die', 'Mit', 'Don', 'Fre', 'Sam']
+        }, options.weekDays),
+        switchMonthOnHoverDelay: 800,
+      }, options),
+      displayedCalendarElement: false,
+      preSelection: false,
+      selecting: false,
+      element: element,
+    });
 
-      this.setSelected(this.options.selected);
+    this.enabled = this.options.enabled;
 
-      this._renderCalendar();
+    this.setSelected(this.options.selected);
 
-    };
+    this._renderCalendar();
+
+  };
 
   CibulCalendar.prototype = {
+
     disable: function() {
 
       this.enabled = false;
 
-      addClass(getElementsByClassName(this.element, this.options.classes.calendar)[0], this.options.classes.disabled);
+      addClass( getElementsByClassName( this.element, this.options.classes.calendar)[0], this.options.classes.disabled );
 
     },
+
     enable: function() {
 
       this.enabled = true;
 
-      removeClass(getElementsByClassName(this.element, this.options.classes.calendar)[0], this.options.classes.disabled);
+      removeClass( getElementsByClassName( this.element, this.options.classes.calendar)[0], this.options.classes.disabled );
 
     },
+
     showNext: function() {
 
-      if (!this.enabled) return;
+      if ( !this.enabled ) return;
 
       this._incDisplayedMonth();
 
     },
+
     showPrevious: function() {
 
-      if (!this.enabled) return;
+      if ( !this.enabled ) return;
 
       this._decDisplayedMonth();
 
     },
-    setSelected: function(selected, updateMonth) {
 
-      if (selected) {
+    setSelected: function( selected, updateMonth ) {
 
-        if (typeof selected.begin == 'undefined') selected = { begin: selected, end: selected };
+      if ( selected ) {
+
+        if ( typeof selected.begin == 'undefined' ) selected = { begin: selected, end: selected };
         
-        if (typeof updateMonth == 'undefined') updateMonth = true;
+        if ( typeof updateMonth == 'undefined' ) updateMonth = true;
 
-        this.selection = (selected.begin > selected.end)?{ begin: selected.end, end: selected.begin }:selected;
+        this.selection = ( selected.begin > selected.end ) ? { begin: selected.end, end: selected.begin } : selected;
 
-        if (this.selection && updateMonth) { 
-          this._setDisplayedMonth(new Date(this.selection.begin.getTime()));
+        if ( this.selection && updateMonth ) {
+
+          this._setDisplayedMonth( new Date( this.selection.begin.getTime() ) );
+
         } else {
-          this._renderSelection(this.selection);  
+
+          this._renderSelection( this.selection );
+
         }
 
       } else {
@@ -131,121 +162,140 @@
       }
 
     },
+
     _getSelected: function() {
 
-      if (typeof this.selection == 'undefined') this.selection = false;
+      if ( typeof this.selection == 'undefined' ) this.selection = false;
 
       return this.selection;
 
     },
+
     _getSelectedElements: function() {
 
-      return getElementsByClassName(getElementsByClassName(this.displayedCalendarElement, this.options.classes.calendarBody)[0], this.options.classes.selected);
+      return getElementsByClassName( getElementsByClassName( this.displayedCalendarElement, this.options.classes.calendarBody )[0], this.options.classes.selected );
 
     },
+
     _applyBehavior: function() {
 
       var self = this;
 
       // show previous calendar on show previous
 
-      addEvent(getElementsByClassName(this.displayedCalendarElement, this.options.classes.navDomPrev)[0], 'click', function(listItem) {
+      addEvent( getElementsByClassName(this.displayedCalendarElement, this.options.classes.navDomPrev )[0], 'click', function( listItem ) {
+
         self.showPrevious();
+
       });
 
-      addEvent(getElementsByClassName(this.displayedCalendarElement, this.options.classes.navDomNext)[0], 'click', function(listItem) {
+      addEvent( getElementsByClassName(this.displayedCalendarElement, this.options.classes.navDomNext )[0], 'click', function( listItem ) {
+
         self.showNext();
+
       });
 
       // selection behavior on date elements
-      forEach(getElementsByClassName(this.displayedCalendarElement, this.options.classes.calendarBody)[0].getElementsByTagName('li'), function(listItem){
+      forEach( getElementsByClassName(this.displayedCalendarElement, this.options.classes.calendarBody )[0].getElementsByTagName( 'li' ), function( listItem ){
+
         self._applySelectionBehavior(listItem);
+
       });
 
       // selection behavior on month click
-      addEvent(getElementsByClassName(this.displayedCalendarElement, this.options.classes.month)[0], 'click', function(){
+      addEvent( getElementsByClassName(this.displayedCalendarElement, this.options.classes.month )[0], 'click', function(){
+
         self._selectMonth();
+
       });
       
     },
+
     _selectMonth: function(){
 
-      if (!this.enabled || !this.options.range) return;
+      if ( !this.enabled || !this.options.range ) return;
 
       var dMonth = this._getDisplayedMonth();
 
-      this.setSelected({begin: new Date(dMonth.getFullYear(), dMonth.getMonth(), 1), end: new Date(dMonth.getFullYear(), dMonth.getMonth()+1, 0)});
+      this.setSelected( {
+        begin: new Date( dMonth.getFullYear(), dMonth.getMonth(), 1 ),
+        end: new Date( dMonth.getFullYear(), dMonth.getMonth()+1, 0 )
+      } );
 
       this._renderCalendar();
 
-      if (typeof this.options.onSelect != 'undefined') this.options.onSelect(this.selection);
+      if ( typeof this.options.onSelect != 'undefined' ) this.options.onSelect( this.selection );
 
     },
-    _applySelectionBehavior: function(listItem) {
+
+    _applySelectionBehavior: function( listItem ) {
 
       var self = this;
 
-      addEvent(listItem, ['touchstart', 'mousedown'], function(event){
+      addEvent( listItem, ['touchstart', 'mousedown'], function( event ){
 
-        if (self.selecting || !self.enabled) return;
+        if ( self.selecting || !self.enabled ) return;
 
         self.selecting = true;
 
-        self._beginPreselection(listItem);
+        self._beginPreselection( listItem );
 
       });
 
-      addEvent(listItem, ['mouseover', 'touchmove'], function(event) {
+      addEvent( listItem, ['mouseover', 'touchmove'], function( event ) {
 
-        if (!self.selecting || !self.enabled) return; 
+        if ( !self.selecting || !self.enabled ) return; 
           
-        self._updatePreselection(self._getActualListItem(listItem, event));
+        self._updatePreselection( self._getActualListItem(listItem, event ) );
 
       });
 
-      addEvent(listItem, ['mouseup', 'touchend'], function(event){
+      addEvent( listItem, ['mouseup', 'touchend'], function( event ){
 
-        if (!self.selecting || !self.enabled) return;
+        if ( !self.selecting || !self.enabled ) return;
 
         self.selecting = false;
 
-        self._completePreselection(listItem);
+        self._completePreselection( listItem );
 
-        if (getElementsByClassName(self.element, self.options.classes.originCalendar).length) self.element.removeChild(getElementsByClassName(self.element, self.options.classes.originCalendar)[0]);
+        if ( getElementsByClassName( self.element, self.options.classes.originCalendar ).length ) self.element.removeChild( getElementsByClassName( self.element, self.options.classes.originCalendar )[0] );
 
       });
     },
+
     _preventDefaultBodyMove: function(event) {
 
-      if (event.preventDefault) event.preventDefault();
+      if ( event.preventDefault ) event.preventDefault();
 
     },
-    _beginPreselection: function(listItem) {
 
-      if (hasTouch) addEvent(document.getElementsByTagName('body')[0],'touchmove', this._preventDefaultBodyMove);
+    _beginPreselection: function( listItem ) {
+
+      if ( hasTouch ) addEvent( document.getElementsByTagName('body')[0],'touchmove', this._preventDefaultBodyMove );
 
       this.selection = false;
 
       this.currentListItem = listItem;
 
-      this.anchorDate = this._getDateFromElement(listItem);
+      this.anchorDate = this._getDateFromElement( listItem );
 
       this.preSelection = { begin: this.anchorDate, end: this.anchorDate };
 
-      this._renderSelection(this.preSelection, true);
+      this._renderSelection( this.preSelection, true );
 
     },
-    _updatePreselection: function(listItem) {
 
-      if (this.currentListItem == listItem) return;
+    _updatePreselection: function( listItem ) {
+
+      if ( this.currentListItem == listItem ) return;
 
       this.currentListItem = listItem;
 
-      var date = this._getDateFromElement(listItem);
+      var date = this._getDateFromElement( listItem );
 
-      if (this.options.range) {
+      if ( this.options.range ) {
 
-        this.preSelection = (date < this.anchorDate)?{ begin: date, end: this.anchorDate }:{ begin: this.anchorDate, end: date };
+        this.preSelection = ( date < this.anchorDate )?{ begin: date, end: this.anchorDate }:{ begin: this.anchorDate, end: date };
 
       } else {
 
@@ -253,14 +303,15 @@
 
       }
 
-      this._switchMonthOnTimer(listItem, date);
+      this._switchMonthOnTimer( listItem, date );
 
-      this._renderSelection(this.preSelection, true);
+      this._renderSelection( this.preSelection, true );
 
     },
-    _completePreselection: function(listItem) {
 
-      if (hasTouch) document.getElementsByTagName('body')[0].removeEventListener('touchmove', this._preventDefaultBodyMove, false);
+    _completePreselection: function( listItem ) {
+
+      if ( hasTouch ) document.getElementsByTagName( 'body' )[0].removeEventListener( 'touchmove', this._preventDefaultBodyMove, false );
 
       this.currentListItem = false;
 
@@ -270,43 +321,56 @@
 
       this.preSelection = false;
 
-      if (typeof this.options.onSelect != 'undefined') this.options.onSelect(this.options.range?this.selection:this.selection.begin);
+      if ( typeof this.options.onSelect != 'undefined' ) this.options.onSelect( this.options.range?this.selection:this.selection.begin );
 
       this._clearHoverTimer();
 
     },
-    _switchMonthOnTimer: function(listItem, date) {
+
+    _switchMonthOnTimer: function( listItem, date ) {
 
       var toggle = false,
-        self = this,
-        sameMonth = (self._getDisplayedMonth().getMonth() == date.getMonth());
+      
+      self = this,
+      
+      sameMonth = ( self._getDisplayedMonth().getMonth() == date.getMonth() );
 
-      switch (getChildIndex(listItem.parentNode))
+      switch ( getChildIndex( listItem.parentNode ) )
       {
         case 0:
-          if ((getChildIndex(listItem) === 0) || !sameMonth) toggle = 'prev';
+
+          if ( (getChildIndex(listItem) === 0) || !sameMonth ) toggle = 'prev';
           break;
+
         case 4:
-          if (!sameMonth) toggle = 'next';
+
+          if ( !sameMonth ) toggle = 'next';
           break;
+
         case 5:
-          if ((getChildIndex(listItem) == 6) || !sameMonth) toggle = 'next';
+
+          if ( (getChildIndex(listItem) == 6) || !sameMonth ) toggle = 'next';
           break;
+
       }
 
-      if (toggle) {
+      if ( toggle ) {
 
-        if (typeof this.hoverTimer == 'undefined') this.hoverTimer = setTimeout(function(){
+        if ( typeof this.hoverTimer == 'undefined' ) this.hoverTimer = setTimeout( function(){
 
-          if (toggle == 'next') {
+          if ( toggle == 'next' ) {
+
             self.showNext();
-          } else if (toggle == 'prev') {
+
+          } else if ( toggle == 'prev' ) {
+
             self.showPrevious();
+
           }
 
           self._clearHoverTimer();
 
-        }, this.options.switchMonthOnHoverDelay);
+        }, this.options.switchMonthOnHoverDelay );
 
       } else {
 
@@ -315,89 +379,105 @@
       }
 
     },
+
     _clearHoverTimer: function() {
 
-      if (this.hoverTimer) clearTimeout(this.hoverTimer);
+      if ( this.hoverTimer ) clearTimeout( this.hoverTimer );
 
       this.hoverTimer = undefined;
 
     },
-    _getDateFromElement: function(liElement) {
 
-      var ulIndex = getChildIndex(liElement.parentNode),
-          incMonth = 0,
-          dateValue = parseInt(liElement.getElementsByTagName('span')[0].innerHTML, 10),
-          displayedMonth = this._getDisplayedMonth();
+    _getDateFromElement: function( liElement ) {
 
-      if ((ulIndex===0) && (dateValue>10)) incMonth = -1;
+      var ulIndex = getChildIndex( liElement.parentNode ),
 
-      if ((ulIndex>=4) && (dateValue<12)) incMonth = 1;
+      incMonth = 0,
 
-      return new Date(displayedMonth.getFullYear(), displayedMonth.getMonth() + incMonth, dateValue);
+      dateValue = parseInt( liElement.getElementsByTagName('span')[0].innerHTML, 10 ),
+
+      displayedMonth = this._getDisplayedMonth();
+
+      if ( (ulIndex===0) && (dateValue>10) ) incMonth = -1;
+
+      if ( (ulIndex>=4) && (dateValue<12) ) incMonth = 1;
+
+      return new Date( displayedMonth.getFullYear(), displayedMonth.getMonth() + incMonth, dateValue );
 
     },
+
     _incDisplayedMonth: function() {
 
       var displayedMonth = this._getDisplayedMonth();
 
-      displayedMonth.setMonth(displayedMonth.getMonth()+1);
+      displayedMonth.setMonth( displayedMonth.getMonth()+1 );
 
-      this._setDisplayedMonth(displayedMonth);
+      this._setDisplayedMonth( displayedMonth );
 
     },
+
     _decDisplayedMonth: function() {
 
       var displayedMonth = this._getDisplayedMonth();
 
-      displayedMonth.setMonth(displayedMonth.getMonth()-1);
+      displayedMonth.setMonth( displayedMonth.getMonth()-1 );
 
-      this._setDisplayedMonth(displayedMonth);
+      this._setDisplayedMonth( displayedMonth );
 
     },
-    _setDisplayedMonth: function(date) {
+
+    _setDisplayedMonth: function( date ) {
 
       this.displayedMonth = date;
 
       this._renderCalendar();
 
     },
+
     _getDisplayedMonth: function() {
 
-      if (typeof this.displayedMonth == 'undefined') this.displayedMonth = this.options.init;
+      if ( typeof this.displayedMonth == 'undefined' ) this.displayedMonth = this.options.init;
 
       return this.displayedMonth;
 
     },
+
     _clearSelectionRender: function() {
 
       var self = this;
 
-      if (!this.displayedCalendarElement) return;
+      if ( !this.displayedCalendarElement ) return;
 
-      forEach(getElementsByClassName(getElementsByClassName(this.displayedCalendarElement, this.options.classes.calendarBody)[0], this.options.classes.selected), function(listItem) {
+      forEach( getElementsByClassName( getElementsByClassName(this.displayedCalendarElement, this.options.classes.calendarBody)[0], this.options.classes.selected ), function( listItem ) {
 
-        removeClass(listItem, self.options.classes.selected);
+        removeClass( listItem, self.options.classes.selected );
 
       });
 
     },
-    _renderSelection: function(selection, preSelection) {
 
-      if (!this.displayedCalendarElement) return;
+    _renderSelection: function( selection, preSelection ) {
+
+      if ( !this.displayedCalendarElement ) return;
 
       var iDate = false, 
-        i=0, 
-        classes,
-        self = this,
-        currentMonth = self._getDisplayedMonth().getMonth();
+      
+      i=0, 
+      
+      classes,
+      
+      self = this,
+      
+      currentMonth = self._getDisplayedMonth().getMonth();
         
-      preSelection = (typeof preSelection == 'undefined')?false:preSelection;
+      preSelection = (typeof preSelection == 'undefined') ? false : preSelection;
 
       forEach(getElementsByClassName(this.displayedCalendarElement, this.options.classes.calendarBody)[0].getElementsByTagName('li'), function(listItem) {
       
         classes = [];
 
         if (!iDate) iDate = self._getDateFromElement(listItem);
+
         else iDate.setDate(iDate.getDate()+1);
 
         if (self._isWithinRange(iDate, selection)) classes.push(preSelection?self.options.classes.preSelected:self.options.classes.selected);
@@ -413,7 +493,8 @@
       });
 
     },
-    _generateCalendarHTML: function(displayedMonth) {
+
+    _generateCalendarHTML: function( displayedMonth ) {
 
       var i,
         render = this.options.template,
@@ -491,6 +572,7 @@
       return render;
 
     },
+
     _renderCalendar: function() {
 
       var displayedMonth = this._getDisplayedMonth();
@@ -542,7 +624,8 @@
       this._applyBehavior();
 
     },
-    _getMonthStack: function(month, year) {
+
+    _getMonthStack: function( month, year ) {
 
       var calStack = [], 
           day = new Date(year, month + 1, 0), //start with the last day of the month
@@ -584,14 +667,16 @@
       return calStack;
 
     },
-    _isToday: function(date) {
+
+    _isToday: function( date ) {
 
       if (typeof this.today == 'undefined') this.today = new Date().toDateString();
 
       return (date.toDateString() == this.today);
 
     },
-    _isWithinRange: function(date, range) {
+
+    _isWithinRange: function( date, range ) {
 
       var dateString = date.toDateString();
       var rangeStrings = {begin: range.begin.toDateString(), end: range.end.toDateString() };
@@ -603,7 +688,8 @@
       return false;
 
     },
-    _getActualListItem: function(listItem, event) {
+
+    _getActualListItem: function( listItem, event ) {
 
       if (typeof event == 'undefined') return listItem;
       if (typeof event.touches == 'undefined') return listItem;
@@ -611,19 +697,25 @@
       return elementFromDocumentPoint(event.touches[0].pageX, event.touches[0].pageY).parentNode;
 
     }
+
   };
 
 
-  var setCibulCalendar = function(elementId, options) {
+  var setCibulCalendar = function( elementId, options ) {
 
     // on field select, need to create element
     // on click elsewhere need to hide it
 
-    var element = document.getElementById(elementId),
+    var element = document.getElementById( elementId ),
+
     calCanvas,
+
     calendar,
+
     inFocus = false,
+
     _init = function() {
+
       options = extend({
         onSelect: _onSelect,
         separator: ' - ',
@@ -632,13 +724,18 @@
       }, options?options:{});
 
       addEvent(element, 'click', _focus);
+
       addEvent(document.getElementsByTagName('body')[0], 'click', function(){
         if (!inFocus) _blur();
         inFocus = false;
       });
+
     },
+
     _focus = function() {
+
       inFocus = true;
+
       if (!calCanvas) _createCalendar();
 
       extend(calCanvas.style, {
@@ -650,10 +747,15 @@
       calCanvas.style.display = 'block';
 
       element.blur();
+
     },
+
     _blur = function() {
+
       if (calCanvas) calCanvas.style.display = 'none';
+
     },
+
     _createCalendar = function() {
 
       calCanvas = document.createElement('div');
@@ -670,49 +772,66 @@
       new CibulCalendar(calCanvas, options);
 
     },
-    _onSelect = function(newSelection) {
+
+    _onSelect = function( newSelection ) {
 
       element.value = newSelection.begin?_dateToString(newSelection.begin) + (newSelection.begin!=newSelection.end?options.separator+_dateToString(newSelection.end):''):_dateToString(newSelection);
       fireEvent(element, 'change');
 
       setTimeout(_blur,200);
     },
-    _dateToString = function(date) {
+
+    _dateToString = function( date ) {
       return _fZ(date.getDate()) + '/' + _fZ(date.getMonth()+1) + '/' + date.getFullYear();
     },
-    _fZ = function(n) {
+
+    _fZ = function( n ) {
       return (n>9?'':'0') + n;
     };
 
     _init();
 
   },
+
   extend = function(){
+
     for(var i=1; i<arguments.length; i++)
         for(var key in arguments[i])
             if(arguments[i].hasOwnProperty(key))
                 arguments[0][key] = arguments[i][key];
     return arguments[0];
+
   },
-  getElementsByClassName = function(node, classname) {
+
+  getElementsByClassName = function( node, classname ) {
+
     var a = [];
     var re = new RegExp('(^| )'+classname+'( |$)');
     var els = node.getElementsByTagName("*");
     for(var i=0,j=els.length; i<j; i++)
         if(re.test(els[i].className))a.push(els[i]);
     return a;
+
   },
-  isElement = function(o){
+
+  isElement = function( o ){
+
     return (
       typeof HTMLElement === "object" ? o instanceof HTMLElement : //DOM2
       o && typeof o === "object" && o.nodeType === 1 && typeof o.nodeName==="string"
     );
+
   },
-  forEach = function(array, action) {
+
+  forEach = function( array, action ) {
+
     for (var i = 0; i < array.length; i++)
       action(array[i]);
+
   },
-  addEvent = function(elem, types, eventHandle) {
+
+  addEvent = function( elem, types, eventHandle ) {
+
     if (elem === null || elem === undefined) return;
     if (typeof types == 'string') types = [types];
     forEach(types, function(type){
@@ -724,8 +843,11 @@
           elem["on"+type]=eventHandle;
       }  
     });
+
   },
-  fireEvent = function(elem, types) {
+
+  fireEvent = function( elem, types ) {
+
     if (elem === null || elem === undefined) return;
     if (typeof types == 'string') types = [types];
     forEach(types, function(type){
@@ -737,8 +859,11 @@
         elem.dispatchEvent(evt);
       }
     });
+
   },
-  makeUnselectable = function(node) {
+
+  makeUnselectable = function( node ) {
+
     if (node.nodeType == 1) node.setAttribute("unselectable", "on");
     
     var child = node.firstChild;
@@ -746,8 +871,10 @@
         makeUnselectable(child);
         child = child.nextSibling;
     }
+
   },
-  previousObject = function(elem) {
+
+  previousObject = function( elem ) {
     
     elem = elem.previousSibling;
 
@@ -757,7 +884,8 @@
     return elem;
 
   },
-  getChildIndex = function(child) {
+
+  getChildIndex = function( child ) {
 
     var i = 0;
 
@@ -766,9 +894,13 @@
     return i;
 
   },
+
   hasClass = function(element, cls) { return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1; },
+
   addClass = function(element, className) { if (!hasClass(element, className)) element.className = element.className + ' ' + className; },
+
   removeClass = function(element, cls) { if (hasClass(element, cls)) { var regex = new RegExp(cls, 'g'); element.className = element.className.replace(regex,''); } },
+
   elementFromPointIsUsingViewPortCoordinates = function() {
     if (window.pageYOffset > 0) {     // page scrolled down
       return (window.document.elementFromPoint(0, window.pageYOffset + window.innerHeight -1) === null);
@@ -777,17 +909,20 @@
     }
     return false; // no scrolling, don't care
   },
+
   elementFromDocumentPoint = function(x,y) {
+
     if (elementFromPointIsUsingViewPortCoordinates()){
       return window.document.elementFromPoint(x - window.pageXOffset, y - window.pageYOffset);
     } else {
       return window.document.elementFromPoint(x,y);
     }
+    
   };
 
-  extend(window, {
+  return {
     CibulCalendar: CibulCalendar,
     setCibulCalendar: setCibulCalendar
-  });
+  };
 
-})();
+}));

@@ -20,6 +20,10 @@ Features include:
 
 How to use
 
+The script can be used directly in the browser or using CommonJs or AMD
+
+Browserify example (CommonJs): `var cLib = require('./CibulCalendar/src/CibulCalendar') )`
+
 There are two ways to use the calendar:
 
 The easiest way is to use the helper function to bind the calendar to an input field:
