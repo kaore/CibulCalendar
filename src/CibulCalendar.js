@@ -15,7 +15,7 @@
 
   } else { // Browser global
 
-    var objs = factory()
+    var objs = factory();
 
     root.CibulCalendar = objs.CibulCalendar;
 
