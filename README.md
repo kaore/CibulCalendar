@@ -8,7 +8,7 @@ Here is the simplest way to get it running:
   setCibulCalendar('basic'); // will stick to element <input type="text" id="basic"/>
 }`
 
-You can see a live demo by clicking on the "where" field in the header in [this website](http://cibul.net)
+You can see used [here](https://cibul.net/pepite/fr)
 
 Features include:
 
