@@ -145,7 +145,7 @@
 
         if ( this.selection && updateMonth ) {
 
-          this._setDisplayedMonth( new Date( this.selection.begin.getTime() ) );
+          this.setDisplayedMonth( new Date( this.selection.begin.getTime() ) );
 
         } else {
 
@@ -160,6 +160,14 @@
         this._clearSelectionRender();
 
       }
+
+    },
+
+    setDisplayedMonth: function( date ) {
+
+      this.displayedMonth = date;
+
+      this._renderCalendar();
 
     },
 
@@ -412,7 +420,7 @@
 
       displayedMonth.setMonth( displayedMonth.getMonth()+1 );
 
-      this._setDisplayedMonth( displayedMonth );
+      this.setDisplayedMonth( displayedMonth );
 
     },
 
@@ -422,15 +430,7 @@
 
       displayedMonth.setMonth( displayedMonth.getMonth()-1 );
 
-      this._setDisplayedMonth( displayedMonth );
-
-    },
-
-    _setDisplayedMonth: function( date ) {
-
-      this.displayedMonth = date;
-
-      this._renderCalendar();
+      this.setDisplayedMonth( displayedMonth );
 
     },
 
@@ -857,7 +857,7 @@
         var evt = document.createEvent("HTMLEvents");
         evt.initEvent(type, false, true);
         elem.dispatchEvent(evt);
-      }
+      }se
     });
 
   },
