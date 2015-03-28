@@ -857,7 +857,7 @@
         var evt = document.createEvent("HTMLEvents");
         evt.initEvent(type, false, true);
         elem.dispatchEvent(evt);
-      }se
+      }
     });
 
   },
