@@ -37,7 +37,7 @@
 
     extend( this, {
       options: extend({
-        init: new Date(),   // month to be displayed at init (defaults at current)
+        init: this._getMonthFirstDate(),   // month to be displayed at init (defaults at current)
         range: true,        // date selection mode
         lang: 'en',
         enabled: true,
@@ -93,7 +93,7 @@
 
     this.enabled = this.options.enabled;
 
-    this.setSelected(this.options.selected);
+    this.setSelected( this.options.selected );
 
     this._renderCalendar();
 
@@ -165,9 +165,21 @@
 
     setDisplayedMonth: function( date ) {
 
-      this.displayedMonth = date;
+      this.displayedMonth = this._getMonthFirstDate( date );
 
       this._renderCalendar();
+
+    },
+
+    _getMonthFirstDate: function( refDate ) {
+
+      if ( typeof refDate == 'undefined' ) {
+
+        refDate = new Date();
+
+      }
+
+      return new Date( refDate.getFullYear(), refDate.getMonth(), 1)
 
     },
 
