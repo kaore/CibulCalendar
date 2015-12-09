@@ -1,5 +1,5 @@
 /*!
- * CibulCalendar v0.2.7 ~ Copyright (c) 2013 Kari Olafsson, http://tech.cibul.net
+ * CibulCalendar v0.2.8 ~ Copyright (c) 2013 Kari Olafsson, http://tech.cibul.net
  * Released under MIT license, http://opensource.org/licenses/mit-license.php
  */
 
@@ -323,13 +323,17 @@
 
       this.currentListItem = false;
 
-      this.setSelected(this.preSelection, false);
+      this.setSelected( this.preSelection, false );
 
-      this._renderSelection(this.selection);
+      this._renderSelection( this.selection );
 
       this.preSelection = false;
 
-      if ( typeof this.options.onSelect != 'undefined' ) this.options.onSelect( this.options.range?this.selection:this.selection.begin );
+      if ( typeof this.options.onSelect != 'undefined' ) {
+
+        this.options.onSelect( this.options.range?this.selection:this.selection.begin );
+
+      }
 
       this._clearHoverTimer();
 
@@ -406,9 +410,9 @@
 
       displayedMonth = this._getDisplayedMonth();
 
-      if ( (ulIndex===0) && (dateValue>10) ) incMonth = -1;
+      if ( ( ulIndex === 0 ) && ( dateValue > 10 ) ) incMonth = -1;
 
-      if ( (ulIndex>=4) && (dateValue<12) ) incMonth = 1;
+      if ( ( ulIndex >= 4 ) && ( dateValue < 15 ) ) incMonth = 1;
 
       return new Date( displayedMonth.getFullYear(), displayedMonth.getMonth() + incMonth, dateValue );
 
@@ -517,21 +521,20 @@
 
         var classes = [];
 
-        regexp = new RegExp('#cls' + (i>9?'':'0') + i);
+        regexp = new RegExp( '#cls' + ( i > 9 ? '' : '0' ) + i );
 
         varMonth = 0;
 
-        if ((i<7) && (mSi>10)){
+        if ( ( i < 7 ) && ( mSi > 10 ) ) {
 
-          classes.push(this.options.classes.prevMonthDate);
+          classes.push( this.options.classes.prevMonthDate );
           varMonth = -1;
 
         } else {
+ 
+          if ( (i > 27 ) && ( mSi < 15 ) ) {
 
-          // 
-          if ((i>27) && (mSi<13)) {
-
-            classes.push(this.options.classes.nextMonthDate);
+            classes.push( this.options.classes.nextMonthDate );
             varMonth = 1;
 
           }
