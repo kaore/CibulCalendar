@@ -1,0 +1,25 @@
+{
+  "name": "CibulCalendar",
+  "homepage": "https://github.com/kaore/CibulCalendar",
+  "authors": [
+    "kaore"
+  ],
+  "description": "A javascript date range picker",
+  "main": "src/CibulCalendar.js",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "date",
+    "picker",
+    "calendar"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
